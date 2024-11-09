@@ -1,2 +1,2 @@
-# ContactsApp
-A simple contacts app written in flutter
+# Flutter projects
+Some projects written in flutter
