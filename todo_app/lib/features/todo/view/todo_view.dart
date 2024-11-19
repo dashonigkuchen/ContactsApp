@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:todo_app/core/routes/route_name.dart';
 import 'package:todo_app/core/theme/app_color.dart';
 import 'package:todo_app/core/utils/app_string.dart';
+import 'package:todo_app/features/todo/view/todo_navigation_drawer.dart';
 import 'package:todo_app/features/todo/cubit/todo_cubit.dart';
 
 class TodoView extends StatefulWidget {
@@ -23,16 +24,11 @@ class _TodoViewState extends State<TodoView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: TodoNavigationDrawer(),
       appBar: AppBar(
         title: const Text(
           AppString.todo,
         ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.person),
-          ),
-        ],
       ),
       body: BlocBuilder<TodoCubit, TodoState>(
         builder: (context, state) {

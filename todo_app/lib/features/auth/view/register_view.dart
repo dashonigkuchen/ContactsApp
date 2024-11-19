@@ -46,6 +46,9 @@ class _RegisterViewState extends State<RegisterView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(AppString.register),
+      ),
       body: Center(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -165,10 +168,10 @@ class _RegisterViewState extends State<RegisterView> {
                         onPressed: () {
                           if (_registerFormKey.currentState!.validate()) {
                             context.read<RegisterCubit>().register(
-                              firstName: _firstNameController.text, 
-                              lastName: _lastNameController.text, 
-                              email: _emailController.text, 
-                              password: _passwordController.text);
+                                firstName: _firstNameController.text,
+                                lastName: _lastNameController.text,
+                                email: _emailController.text,
+                                password: _passwordController.text);
                           }
                         },
                       ),

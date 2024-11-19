@@ -14,6 +14,8 @@ class AppString {
   static const internalServerError = "Internal Server Error";
   static const internetNotFound = "Internet not found";
   static const login = "Login";
+  static const saveCredentials = "Save Credentials?";
+  static const createAccount = "Create Account";
   static const accountCreated = "Account created";
   static const success = "Success";
 
@@ -33,8 +35,15 @@ class AppString {
   static const todoUpdated = "Todo updated successfully";
   static const todoDeleted = "Todo deleted successfully";
   static const deleteTodo = "Delete Todo";
-  static const areYouSureToDeleteTodo = "Are you sure to delete todo? ";
+  static const areYouSureToDeleteTodo = "Are you sure to delete todo?";
   static const profile = "Profile";
   static const logout = "Logout";
   static const profileUpdated = "Profile Updated";
+  static const areYouSureToLogout = "Are you sure to logout?";
+
+  static const settings = "Settings";
+  static const lightThemeMode = "Light";
+  static const darkThemeMode = "Dark";
+  static const systemThemeMode = "System";
+  static const theme = "Theme";
 }

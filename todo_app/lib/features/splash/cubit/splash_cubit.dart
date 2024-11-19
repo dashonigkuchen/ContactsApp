@@ -17,4 +17,16 @@ class SplashCubit extends Cubit<SplashState> {
     res.fold((failure) => emit(SplashError(error: failure.message)),
         (session) => emit(SplashSuccess()));
   }
+
+  void logout() async {
+    emit(SplashLoading());
+
+    final res = await _authRepository.logout();
+
+    if (res != null) {
+      emit(SplashError(error: res.message));
+    } else {
+      emit(SplashSuccess());
+    }
+  }
 }

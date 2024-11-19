@@ -27,7 +27,9 @@ class _LoginViewState extends State<LoginView> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool isPasswordVisible = false;
-  final SecureStorageService _secureStorageService = locator<SecureStorageService>();
+  final SecureStorageService _secureStorageService =
+      locator<SecureStorageService>();
+  bool saveCredentials = false;
 
   @override
   void dispose() {
@@ -126,9 +128,31 @@ class _LoginViewState extends State<LoginView> {
                             color: AppColor.greyColor,
                           ),
                         ),
+                        onFieldSubmitted: (text) {
+                          if (_loginFormKey.currentState!.validate()) {
+                            context.read<LoginCubit>().login(
+                                email: _emailController.text,
+                                password: _passwordController.text);
+                          }
+                        },
                       ),
                       const SizedBox(
                         height: 10,
+                      ),
+                      Row(
+                        children: [
+                          const Text(
+                            AppString.saveCredentials,
+                          ),
+                          Checkbox(
+                            value: saveCredentials,
+                            onChanged: (val) {
+                              setState(() {
+                                saveCredentials = val!;
+                              });
+                            },
+                          ),
+                        ],
                       ),
                       RoundedElevatedButton(
                         buttonText: AppString.login,
@@ -143,29 +167,13 @@ class _LoginViewState extends State<LoginView> {
                       const SizedBox(
                         height: 10,
                       ),
-                      GestureDetector(
-                        onTap: () {
+                      TextButton(
+                        onPressed: () {
                           clearText();
                           context.pushNamed(RouteNames.register);
                         },
-                        child: RichText(
-                          text: const TextSpan(
-                            text: AppString.newUser,
-                            style: TextStyle(
-                              color: AppColor.greyColor,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: AppString.register,
-                                style: TextStyle(
-                                  color: AppColor.appColor,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      )
+                        child: const Text(AppString.createAccount),
+                      ),
                     ],
                   ),
                 );

@@ -15,7 +15,10 @@ class LoginCubit extends Cubit<LoginState> {
     required String password,
   }) async {
     emit(LoginLoading());
-    final res = await _authRepository.login(email: email, password: password);
+    final res = await _authRepository.login(
+      email: email,
+      password: password,
+    );
 
     res.fold((failure) => emit(LoginError(error: failure.message)),
         (session) => emit(LoginSuccess(session: session)));

@@ -9,7 +9,8 @@ class CustomTextFormField extends StatelessWidget {
       required this.keyboardType,
       required this.obsecureText,
       required this.hintText,
-      required this.suffix});
+      required this.suffix,
+      this.onFieldSubmitted});
 
   final TextEditingController controller;
   final String? Function(String? val) validator;
@@ -17,6 +18,7 @@ class CustomTextFormField extends StatelessWidget {
   final bool obsecureText;
   final String hintText;
   final Widget? suffix;
+  final Function(String)? onFieldSubmitted;
   
   @override
   Widget build(BuildContext context) {
@@ -56,6 +58,7 @@ class CustomTextFormField extends StatelessWidget {
             ?.copyWith(color: AppColor.errorColor, fontSize: 12),
       ),
       validator: validator,
+      onFieldSubmitted: onFieldSubmitted,
     );
   }
 }

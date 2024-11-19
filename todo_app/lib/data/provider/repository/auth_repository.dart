@@ -23,6 +23,8 @@ abstract interface class IAuthRepository {
   });
 
   Future<Either<Failure, Session>> checkSession();
+
+  Future<Failure?> logout();
 }
 
 class AuthRepository implements IAuthRepository {
@@ -31,11 +33,12 @@ class AuthRepository implements IAuthRepository {
       locator<InternetConnectionService>();
 
   @override
-  Future<Either<Failure, User>> register(
-      {required String firstName,
-      required String lastName,
-      required String email,
-      required String password}) async {
+  Future<Either<Failure, User>> register({
+    required String firstName,
+    required String lastName,
+    required String email,
+    required String password,
+  }) async {
     try {
       if (await _internetConnectionService.hasInternetAccess()) {
         User user = await _appwriteProvider.account!.create(
@@ -67,8 +70,10 @@ class AuthRepository implements IAuthRepository {
   }
 
   @override
-  Future<Either<Failure, Session>> login(
-      {required String email, required String password}) async {
+  Future<Either<Failure, Session>> login({
+    required String email,
+    required String password,
+  }) async {
     try {
       if (await _internetConnectionService.hasInternetAccess()) {
         Session session =
@@ -104,6 +109,24 @@ class AuthRepository implements IAuthRepository {
       return left(Failure(e.message!));
     } on ServerException catch (e) {
       return left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Failure?> logout() async {
+    try {
+      if (await _internetConnectionService.hasInternetAccess()) {
+        await _appwriteProvider.account!.deleteSession(
+          sessionId: "current",
+        );
+        return null;
+      } else {
+        return Failure(AppString.internetNotFound);
+      }
+    } on AppwriteException catch (e) {
+      return Failure(e.message!);
+    } on ServerException catch (e) {
+      return Failure(e.message);
     }
   }
 }

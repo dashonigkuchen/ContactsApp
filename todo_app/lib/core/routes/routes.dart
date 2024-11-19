@@ -3,9 +3,10 @@ import 'package:todo_app/core/routes/route_name.dart';
 import 'package:todo_app/data/model/todo_model.dart';
 import 'package:todo_app/features/auth/view/login_view.dart';
 import 'package:todo_app/features/auth/view/register_view.dart';
+import 'package:todo_app/features/settings/view/settings_view.dart';
 import 'package:todo_app/features/todo/view/add_edit_todo_view.dart';
 import 'package:todo_app/features/todo/view/todo_view.dart';
-import '../../features/splash/view/splash_view.dart';
+import 'package:todo_app/features/splash/view/splash_view.dart';
 
 final GoRouter router = GoRouter(routes: [
   GoRoute(
@@ -42,5 +43,10 @@ final GoRouter router = GoRouter(routes: [
         todoModel: todoModel,
       );
     },
+  ),
+  GoRoute(
+    name: RouteNames.settings,
+    path: "/settings",
+    builder: (context, state) => const SettingsView(),
   ),
 ]);

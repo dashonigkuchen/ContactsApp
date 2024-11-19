@@ -16,10 +16,11 @@ class RegisterCubit extends Cubit<RegisterState> {
       required String password}) async {
     emit(RegisterLoading());
     final response = await _authRepository.register(
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        password: password);
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: password,
+    );
     response.fold((failure) => emit(RegisterError(error: failure.message)),
         (user) => emit(RegisterSuccess()));
   }
