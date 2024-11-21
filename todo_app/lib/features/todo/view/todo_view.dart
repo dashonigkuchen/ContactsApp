@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:todo_app/core/error/failure.dart';
+import 'package:todo_app/core/language/translation.dart';
 import 'package:todo_app/core/routes/route_name.dart';
 import 'package:todo_app/core/theme/app_color.dart';
-import 'package:todo_app/core/utils/app_string.dart';
 import 'package:todo_app/features/todo/view/todo_navigation_drawer.dart';
 import 'package:todo_app/features/todo/cubit/todo_cubit.dart';
 
@@ -26,8 +27,8 @@ class _TodoViewState extends State<TodoView> {
     return Scaffold(
       drawer: TodoNavigationDrawer(),
       appBar: AppBar(
-        title: const Text(
-          AppString.todo,
+        title: Text(
+          translator(context).titleTodoList,
         ),
       ),
       body: BlocBuilder<TodoCubit, TodoState>(
@@ -57,12 +58,17 @@ class _TodoViewState extends State<TodoView> {
                       );
                     },
                   )
-                : const Center(
-                    child: Text(AppString.noDataFound),
+                : Center(
+                    child: Text(translator(context).infoNoDataFound),
                   );
           } else if (state is TodoError) {
             return Center(
-              child: Text(state.error),
+              child: Text(
+                Failure.createFailureString(
+                  context: context,
+                  failure: state.failure,
+                ),
+              ),
             );
           }
           return Container();

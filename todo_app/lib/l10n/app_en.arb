@@ -1,0 +1,173 @@
+{
+    "appName": "Todo App",
+    "@appName": {
+        "description": "Name of the App"
+    },
+    
+    
+    "hintEmail": "Email",
+    "@hintEmail": {
+        "description": "Email for account"
+    },
+    "hintPassword": "Password",
+    "@hintPassword": {
+        "description": "Password for account"
+    },
+    "hintFirstName": "First name",
+    "@hintFirstName": {
+        "description": "First name of person"
+    },
+    "hintLastName": "Last name",
+    "@hintLastName": {
+        "description": "Last name of person"
+    },
+
+
+    "buttonLogin": "Login",
+    "@buttonLogin": {
+        "description": "Log into the account"
+    },
+    "buttonRegister": "Register",
+    "@buttonRegister": {
+        "description": "Register a new account"
+    },
+    "buttonCreateAccount": "Create Account",
+    "@buttonCreateAccount": {
+        "description": "Redirect to register page"
+    },
+    "buttonLogout": "Logout",
+    "@buttonLogout": {
+        "description": "Log user out"
+    },
+    "buttonAddTodo": "Add todo",
+    "@buttonAddTodo": {
+        "description": "Add a new todo"
+    },
+    "buttonEditTodo": "Edit todo",
+    "@buttonEditTodo": {
+        "description": "Edit the selected todo"
+    },
+    "buttonCancel": "Cancel",
+    "@buttonCancel": {
+        "description": "Cancel current operation"
+    },
+
+
+    "checkboxSaveCredentials": "Save credentials?",
+    "@checkboxSaveCredentials": {
+        "description": "Should credentials be cached?"
+    },
+
+
+    "infoAccountCreated": "Account created",
+    "@infoAccountCreated": {
+        "description": "Account was created successfully"
+    },
+    "infoSuccess": "Success",
+    "@infoSuccess": {
+        "description": "A general message to display success"
+    },
+    "infoNoDataFound": "No data found",
+    "@infoNoDataFound": {
+        "description": "No todo data was found"
+    },
+
+
+    "titleCreateAccount": "Create a new account",
+    "@titleCreateAccount": {
+        "description": "Title of page 'Create account'"
+    },
+    "titleTodoList": "Todo List",
+    "@titleTodoList": {
+        "description": "Title of page 'Todo list'"
+    },
+    "titleAddTodo": "Add Todo",
+    "@titleAddTodo": {
+        "description": "Title of page 'Add Todo'"
+    },
+    "titleEditTodo": "Edit Todo",
+    "@titleEditTodo": {
+        "description": "Title of page 'Edit Todo'"
+    },
+    "titleDeleteTodo": "Delete Todo",
+    "@titleDeleteTodo": {
+        "description": "Title of dialog 'Delete Todo'"
+    },
+    "titleSettings": "Settings",
+    "@titleSettings": {
+        "description": "Title of page 'Settings'"
+    },
+    "titleTodoNavigationBar": "Menu",
+    "@titleTodoNavigationBar": {
+        "description": "Title of navigation bar in page 'Todo list'"
+    },
+    "titleLogout": "Logout",
+    "@titleLogout": {
+        "description": "Title of dialog 'Logout'"
+    },
+
+
+    "hintTodoTitle": "Title",
+    "@hintTodoTitle": {
+        "description": "Title of each todo"
+    },
+    "hintTodoDescription": "Description",
+    "@hintTodoDescription": {
+        "description": "Description of each todo"
+    },
+
+
+    "settingTitleTheme": "Theme",
+    "@settingTitleTheme": {
+        "description": "Title of setting 'Theme'"
+    },
+    "settingThemeSystem": "System",
+    "@settingThemeSystem": {
+        "description": "Use system theme"
+    },
+    "settingThemeLight": "Light",
+    "@settingThemeLight": {
+        "description": "Use light theme"
+    },
+    "settingThemeDark": "Dark",
+    "@settingThemeDark": {
+        "description": "Use dark theme"
+    },
+
+    "settingTitleLanguage": "Language",
+    "@settingTitleLanguage": {
+        "description": "Title of setting 'Language'"
+    },
+    "settingLanguageEnglish": "English",
+    "@settingLanguageEnglish": {
+        "description": "Use english language"
+    },
+    "settingLanguageGerman": "German",
+    "@settingLanguageGerman": {
+        "description": "Use german language"
+    },
+
+
+    "askLogout": "Are you sure to logout?",
+    "@askLogout": {
+        "description": "Question if logout should happen"
+    },
+    "askDeleteTodo": "Are you sure to delete todo?",
+    "@askDeleteTodo": {
+        "description": "Question if todo should be deleted"
+    },
+
+
+    "errorFieldRequired": "This field is required",
+    "@errorFieldRequired": {
+        "description": "Error shown when field is not entered"
+    },
+    "errorEmailWrong": "Provide a valid email",
+    "@errorEmailWrong": {
+        "description": "Error shown when email is not correct"
+    },
+    "errorInternetError": "Internet connection problem",
+    "@errorInternetError": {
+        "description": "Error shown when an internet connection error happened"
+    }
+}

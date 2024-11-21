@@ -6,13 +6,15 @@ class AppTheme {
     brightness: Brightness.dark,
     scaffoldBackgroundColor: AppColor.darkBackGroundColor,
     appBarTheme: const AppBarTheme(backgroundColor: AppColor.darkAppBarColor),
-    progressIndicatorTheme: 
-        const ProgressIndicatorThemeData(color: AppColor.appColor));
-  
+    progressIndicatorTheme:
+        const ProgressIndicatorThemeData(color: AppColor.appColor),
+  );
+
   static final lightTheme = ThemeData.dark(useMaterial3: true).copyWith(
-    brightness: Brightness.light,
-    scaffoldBackgroundColor: AppColor.lightBackGroundColor,
-    appBarTheme: const AppBarTheme(backgroundColor: AppColor.lightAppBarColor),
-    progressIndicatorTheme: 
-        const ProgressIndicatorThemeData(color: AppColor.appColor));
+    // brightness: Brightness.light,
+    // scaffoldBackgroundColor: AppColor.lightBackGroundColor,
+    // appBarTheme: const AppBarTheme(backgroundColor: AppColor.lightAppBarColor),
+    // progressIndicatorTheme:
+    //     const ProgressIndicatorThemeData(color: AppColor.appColor),
+  );
 }

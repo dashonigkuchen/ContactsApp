@@ -19,9 +19,9 @@ final class TodoFetchSuccess extends TodoState {
 }
 
 final class TodoError extends TodoState {
-  final String error;
+  final Failure failure;
 
   TodoError({
-    required this.error,
+    required this.failure,
   });
 }

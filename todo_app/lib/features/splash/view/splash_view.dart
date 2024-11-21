@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:todo_app/core/error/failure.dart';
 import 'package:todo_app/core/routes/route_name.dart';
 import 'package:todo_app/core/utils/custom_snackbar.dart';
 import 'package:todo_app/core/utils/full_screen_dialog_loader.dart';
 import 'package:todo_app/features/splash/cubit/splash_cubit.dart';
-import '../../../core/utils/app_image_url.dart';
+import 'package:todo_app/core/utils/app_image_url.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -37,7 +38,13 @@ class _SplashViewState extends State<SplashView> {
             } else if (state is SplashError) {
               FullScreenDialogLoader.cancel(context);
               context.goNamed(RouteNames.login);
-              CustomSnackbar.showError(context, state.error);
+              CustomSnackbar.showError(
+                context,
+                Failure.createFailureString(
+                  context: context,
+                  failure: state.failure,
+                ),
+              );
             }
           },
           builder: (context, state) {

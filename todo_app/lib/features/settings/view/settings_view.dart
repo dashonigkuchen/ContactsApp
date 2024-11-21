@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_app/core/locators/locator.dart';
+import 'package:todo_app/core/language/language_provider.dart';
+import 'package:todo_app/core/language/translation.dart';
 import 'package:todo_app/core/theme/theme_provider.dart';
-import 'package:todo_app/core/utils/app_string.dart';
-import 'package:todo_app/core/utils/secure_storage_service.dart';
-import 'package:todo_app/core/utils/storage_key.dart';
+import 'package:todo_app/features/settings/settings_options.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({super.key});
@@ -15,32 +14,13 @@ class SettingsView extends StatefulWidget {
 
 class _SettingsViewState extends State<SettingsView> {
   final _formKey = GlobalKey<FormState>();
-  final SecureStorageService _secureStorageService =
-      locator<SecureStorageService>();
-  static String _themeMode = "System";
-
-  @override
-  void initState() {
-    super.initState();
-
-    _setDefaults();
-  }
-
-  Future<void> _setDefaults() async {
-    final theme =
-        await _secureStorageService.getValue(StorageKey.themeMode) ?? "System";
-
-    setState(() {
-      _themeMode = theme;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(AppString.settings),
-      ),
+          title: Text(translator(context).titleSettings),
+          ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -49,34 +29,54 @@ class _SettingsViewState extends State<SettingsView> {
             children: [
               Row(
                 children: [
-                  const Text(
-                    AppString.theme,
+                  Text(
+                    translator(context).settingTitleTheme,
                   ),
-                  DropdownButton<String>(
-                    value: _themeMode,
+                  Spacer(),
+                  DropdownButton<ThemeMode>(
+                    value: Provider.of<ThemeProvider>(context).themeMode,
                     icon: const Icon(
                       Icons.arrow_downward,
                     ),
                     elevation: 16,
-                    items: ThemeProvider.possibleThemes
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (String? value) {
-                      _secureStorageService.setValue(
-                          StorageKey.themeMode, value!);
-                      setState(() {
-                        _themeMode = value;
-                      });
-                      Provider.of<ThemeProvider>(
-                        context,
-                        listen: false,
-                      ).setThemeMode(
-                        themeMode: _themeMode,
-                      );
+                    items: SettingsOptions.getThemeModeOptions(
+                      context: context,
+                    ),
+                    onChanged: (ThemeMode? themeMode) {
+                      if (themeMode != null) {
+                        Provider.of<ThemeProvider>(
+                          context,
+                          listen: false,
+                        ).setThemeMode(
+                          themeMode: themeMode,
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    translator(context).settingTitleLanguage,
+                  ),
+                  Spacer(),
+                  DropdownButton<Locale>(
+                    value: Provider.of<LanguageProvider>(context).locale,
+                    icon: const Icon(
+                      Icons.arrow_downward,
+                    ),
+                    elevation: 16,
+                    items: SettingsOptions.getLanguageOptions(),
+                    onChanged: (Locale? locale) {
+                      if (locale != null) {
+                        Provider.of<LanguageProvider>(
+                          context,
+                          listen: false,
+                        ).setLanguage(
+                          locale: locale,
+                        );
+                      }
                     },
                   ),
                 ],

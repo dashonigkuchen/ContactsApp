@@ -9,9 +9,9 @@ final class LogoutLoading extends LogoutState {}
 final class LogoutSuccess extends LogoutState {}
 
 final class LogoutError extends LogoutState {
-  final String error;
+  final Failure failure;
 
   LogoutError({
-    required this.error,
+    required this.failure,
   });
 }

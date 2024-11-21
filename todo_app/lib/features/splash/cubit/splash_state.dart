@@ -9,9 +9,9 @@ final class SplashLoading extends SplashState {}
 final class SplashSuccess extends SplashState {}
 
 final class SplashError extends SplashState {
-  final String error;
+  final Failure failure;
 
   SplashError({
-    required this.error,
+    required this.failure,
   });
 }

@@ -2,8 +2,9 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:todo_app/core/error/failure.dart';
+import 'package:todo_app/core/language/translation.dart';
 import 'package:todo_app/core/theme/app_color.dart';
-import 'package:todo_app/core/utils/app_string.dart';
 import 'package:todo_app/core/utils/custom_snackbar.dart';
 import 'package:todo_app/core/utils/full_screen_dialog_loader.dart';
 import 'package:todo_app/core/widgets/custom_text_form_field.dart';
@@ -81,8 +82,8 @@ class _AddEditTodoViewState extends State<AddEditTodoView> {
     AwesomeDialog(
       context: context,
       dialogType: DialogType.warning,
-      title: AppString.deleteTodo,
-      desc: AppString.areYouSureToDeleteTodo,
+      title: translator(context).titleDeleteTodo,
+      desc: translator(context).askDeleteTodo,
       dismissOnTouchOutside: true,
       btnCancelOnPress: () {},
       btnOkOnPress: () {
@@ -97,8 +98,9 @@ class _AddEditTodoViewState extends State<AddEditTodoView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-            widget.todoModel == null ? AppString.addTodo : AppString.editTodo),
+        title: Text(widget.todoModel == null
+            ? translator(context).titleAddTodo
+            : translator(context).titleEditTodo),
         actions: [
           if (widget.todoModel != null)
             IconButton(
@@ -125,9 +127,7 @@ class _AddEditTodoViewState extends State<AddEditTodoView> {
               FullScreenDialogLoader.cancel(context);
               CustomSnackbar.showSuccess(
                 context,
-                widget.todoModel == null
-                    ? AppString.todoCreated
-                    : AppString.todoUpdated,
+                translator(context).infoSuccess,
               );
               context.pop();
               context.read<TodoCubit>().getTodo();
@@ -135,7 +135,10 @@ class _AddEditTodoViewState extends State<AddEditTodoView> {
               FullScreenDialogLoader.cancel(context);
               CustomSnackbar.showError(
                 context,
-                state.error,
+                Failure.createFailureString(
+                  context: context,
+                  failure: state.failure,
+                ),
               );
             }
           },
@@ -148,13 +151,13 @@ class _AddEditTodoViewState extends State<AddEditTodoView> {
                     controller: _titleEditingController,
                     validator: (val) {
                       if (val!.isEmpty) {
-                        return AppString.required;
+                        return translator(context).errorFieldRequired;
                       }
                       return null;
                     },
                     keyboardType: TextInputType.text,
                     obsecureText: false,
-                    hintText: AppString.title,
+                    hintText: translator(context).hintTodoTitle,
                     suffix: null,
                   ),
                   const SizedBox(
@@ -164,13 +167,13 @@ class _AddEditTodoViewState extends State<AddEditTodoView> {
                     controller: _descriptionEditingController,
                     validator: (val) {
                       if (val!.isEmpty) {
-                        return AppString.required;
+                        return translator(context).errorFieldRequired;
                       }
                       return null;
                     },
                     keyboardType: TextInputType.text,
                     obsecureText: false,
-                    hintText: AppString.description,
+                    hintText: translator(context).hintTodoDescription,
                     suffix: null,
                   ),
                   const SizedBox(
@@ -190,8 +193,8 @@ class _AddEditTodoViewState extends State<AddEditTodoView> {
                   ),
                   RoundedElevatedButton(
                     buttonText: widget.todoModel == null
-                        ? AppString.add
-                        : AppString.update,
+                        ? translator(context).buttonAddTodo
+                        : translator(context).buttonEditTodo,
                     onPressed: () {
                       _submit();
                     },

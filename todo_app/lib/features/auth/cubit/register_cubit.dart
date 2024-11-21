@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo_app/core/error/failure.dart';
 import 'package:todo_app/core/locators/locator.dart';
 import 'package:todo_app/data/provider/repository/auth_repository.dart';
 
@@ -9,11 +10,12 @@ class RegisterCubit extends Cubit<RegisterState> {
 
   final AuthRepository _authRepository = locator<AuthRepository>();
 
-  void register(
-      {required String firstName,
-      required String lastName,
-      required String email,
-      required String password}) async {
+  void register({
+    required String firstName,
+    required String lastName,
+    required String email,
+    required String password,
+  }) async {
     emit(RegisterLoading());
     final response = await _authRepository.register(
       firstName: firstName,
@@ -21,7 +23,7 @@ class RegisterCubit extends Cubit<RegisterState> {
       email: email,
       password: password,
     );
-    response.fold((failure) => emit(RegisterError(error: failure.message)),
+    response.fold((failure) => emit(RegisterError(failure: failure)),
         (user) => emit(RegisterSuccess()));
   }
 }

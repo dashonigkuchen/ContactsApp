@@ -1,0 +1,59 @@
+{
+    "appName": "Todo App",
+    
+    
+    "hintEmail": "Email",
+    "hintPassword": "Passwort",
+    "hintFirstName": "Vorname",
+    "hintLastName": "Nachname",
+
+
+    "buttonLogin": "Einloggen",
+    "buttonRegister": "Registrieren",
+    "buttonCreateAccount": "Account erstellen",
+    "buttonLogout": "Ausloggen",
+    "buttonAddTodo": "Todo hinzufügen",
+    "buttonEditTodo": "Todo speichern",
+    "buttonCancel": "Abbrechen",
+
+
+    "checkboxSaveCredentials": "Anmeldedaten speichern?",
+
+
+    "infoAccountCreated": "Account erstellt",
+    "infoSuccess": "Erfolgreich",
+    "infoNoDataFound": "Keine Daten gefunden",
+
+
+    "titleCreateAccount": "Erstelle einen Account",
+    "titleTodoList": "Todo Liste",
+    "titleAddTodo": "Todo hinzufügen",
+    "titleEditTodo": "Todo bearbeiten",
+    "titleDeleteTodo": "Todo löschen",
+    "titleSettings": "Einstellungen",
+    "titleTodoNavigationBar": "Menü",
+    "titleLogout": "Ausloggen",
+
+
+    "hintTodoTitle": "Titel",
+    "hintTodoDescription": "Beschreibung",
+
+
+    "settingTitleTheme": "Theme",
+    "settingThemeSystem": "System",
+    "settingThemeLight": "Hell",
+    "settingThemeDark": "Dunkel",
+
+    "settingTitleLanguage": "Sprache",
+    "settingLanguageEnglish": "Englisch",
+    "settingLanguageGerman": "Deutsch",
+
+
+    "askLogout": "Wirklich ausloggen?",
+    "askDeleteTodo": "Todo entgültig löschen?",
+
+
+    "errorFieldRequired": "Pflichtfeld",
+    "errorEmailWrong": "Email nicht gültig",
+    "errorInternetError": "Problem bei der Internetverbindung"
+}

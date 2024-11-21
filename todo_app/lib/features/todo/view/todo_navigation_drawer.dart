@@ -2,9 +2,10 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:todo_app/core/error/failure.dart';
+import 'package:todo_app/core/language/translation.dart';
 import 'package:todo_app/core/routes/route_name.dart';
 import 'package:todo_app/core/utils/app_image_url.dart';
-import 'package:todo_app/core/utils/app_string.dart';
 import 'package:todo_app/core/utils/custom_snackbar.dart';
 import 'package:todo_app/core/utils/full_screen_dialog_loader.dart';
 import 'package:todo_app/features/auth/cubit/logout_cubit.dart';
@@ -24,13 +25,16 @@ class TodoNavigationDrawer extends StatelessWidget {
             context.goNamed(RouteNames.login);
             CustomSnackbar.showSuccess(
               context,
-              AppString.logout,
+              translator(context).infoSuccess,
             );
           } else if (state is LogoutError) {
             FullScreenDialogLoader.cancel(context);
             CustomSnackbar.showError(
               context,
-              state.error,
+              Failure.createFailureString(
+                context: context,
+                failure: state.failure,
+              ),
             );
           }
         },
@@ -40,7 +44,6 @@ class TodoNavigationDrawer extends StatelessWidget {
             children: <Widget>[
               DrawerHeader(
                 decoration: BoxDecoration(
-                  //color: Colors.green,
                   image: DecorationImage(
                     fit: BoxFit.fill,
                     image: AssetImage(AppImageUrl.logo),
@@ -55,18 +58,8 @@ class TodoNavigationDrawer extends StatelessWidget {
                 ),
               ),
               ListTile(
-                leading: Icon(Icons.input),
-                title: Text('Welcome'),
-                onTap: () => {},
-              ),
-              ListTile(
-                leading: Icon(Icons.verified_user),
-                title: Text('Profile'),
-                onTap: () => {Navigator.of(context).pop()},
-              ),
-              ListTile(
                 leading: Icon(Icons.settings),
-                title: Text('Settings'),
+                title: Text(translator(context).titleSettings),
                 onTap: () {
                   Navigator.of(context).pop();
                   context.pushNamed(RouteNames.settings);
@@ -74,13 +67,14 @@ class TodoNavigationDrawer extends StatelessWidget {
               ),
               ListTile(
                 leading: Icon(Icons.exit_to_app),
-                title: Text('Logout'),
+                title: Text(translator(context).titleLogout),
                 onTap: () {
                   AwesomeDialog(
                     context: context,
                     dialogType: DialogType.warning,
-                    title: AppString.logout,
-                    desc: AppString.areYouSureToLogout,
+                    title: translator(context).titleLogout,
+                    desc: translator(context).askLogout,
+                    btnCancelText: translator(context).buttonCancel,
                     dismissOnTouchOutside: true,
                     btnCancelOnPress: () {},
                     btnOkOnPress: () {

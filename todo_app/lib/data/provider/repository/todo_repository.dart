@@ -4,7 +4,6 @@ import 'package:fpdart/fpdart.dart';
 import 'package:todo_app/core/error/failure.dart';
 import 'package:todo_app/core/error/server_exception.dart';
 import 'package:todo_app/core/locators/locator.dart';
-import 'package:todo_app/core/utils/app_string.dart';
 import 'package:todo_app/core/utils/appwrite_constants.dart';
 import 'package:todo_app/core/utils/internet_connection_service.dart';
 import 'package:todo_app/data/model/todo_model.dart';
@@ -62,12 +61,21 @@ class TodoRepository implements ITodoRepository {
         );
         return right(document);
       } else {
-       return left(Failure(AppString.internetNotFound));
+       return left(Failure(
+          message: "",
+          type: FailureType.internet,
+        ));
       }
     } on AppwriteException catch (e) {
-      return left(Failure(e.message!));
+      return left(Failure(
+        message: e.message!,
+        type: FailureType.appwrite,
+      ));
     } on ServerException catch (e) {
-      return left(Failure(e.message));
+      return left(Failure(
+        message: e.message,
+        type: FailureType.internal,
+      ));
     }
   }
 
@@ -90,12 +98,21 @@ class TodoRepository implements ITodoRepository {
             d.map((e) => TodoModel.fromMap(e['data'])).toList();
         return right(todoList);
       } else {
-       return left(Failure(AppString.internetNotFound));
+       return left(Failure(
+          message: "",
+          type: FailureType.internet,
+        ));
       }
     } on AppwriteException catch (e) {
-      return left(Failure(e.message!));
+      return left(Failure(
+        message: e.message!,
+        type: FailureType.appwrite,
+      ));
     } on ServerException catch (e) {
-      return left(Failure(e.message));
+      return left(Failure(
+        message: e.message,
+        type: FailureType.internal,
+      ));
     }
   }
 
@@ -120,12 +137,21 @@ class TodoRepository implements ITodoRepository {
         );
         return right(document);
       } else {
-       return left(Failure(AppString.internetNotFound));
+       return left(Failure(
+          message: "",
+          type: FailureType.internet,
+        ));
       }
     } on AppwriteException catch (e) {
-      return left(Failure(e.message!));
+      return left(Failure(
+        message: e.message!,
+        type: FailureType.appwrite,
+      ));
     } on ServerException catch (e) {
-      return left(Failure(e.message));
+      return left(Failure(
+        message: e.message,
+        type: FailureType.internal,
+      ));
     }
   }
 
@@ -143,12 +169,21 @@ class TodoRepository implements ITodoRepository {
         
         return right(response);
       } else {
-       return left(Failure(AppString.internetNotFound));
+       return left(Failure(
+          message: "",
+          type: FailureType.internet,
+        ));
       }
     } on AppwriteException catch (e) {
-      return left(Failure(e.message!));
+      return left(Failure(
+        message: e.message!,
+        type: FailureType.appwrite,
+      ));
     } on ServerException catch (e) {
-      return left(Failure(e.message));
+      return left(Failure(
+        message: e.message,
+        type: FailureType.internal,
+      ));
     }
   }
 }

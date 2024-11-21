@@ -4,7 +4,6 @@ import 'package:fpdart/fpdart.dart';
 import 'package:todo_app/core/error/failure.dart';
 import 'package:todo_app/core/error/server_exception.dart';
 import 'package:todo_app/core/locators/locator.dart';
-import 'package:todo_app/core/utils/app_string.dart';
 import 'package:todo_app/core/utils/appwrite_constants.dart';
 import 'package:todo_app/core/utils/internet_connection_service.dart';
 import 'package:todo_app/data/provider/appwrite_provider.dart';
@@ -60,12 +59,21 @@ class AuthRepository implements IAuthRepository {
 
         return right(user);
       } else {
-        return left(Failure(AppString.internetNotFound));
+        return left(Failure(
+          message: "",
+          type: FailureType.internet,
+        ));
       }
     } on AppwriteException catch (e) {
-      return left(Failure(e.message!));
+      return left(Failure(
+        message: e.message!,
+        type: FailureType.appwrite,
+      ));
     } on ServerException catch (e) {
-      return left(Failure(e.message));
+      return left(Failure(
+        message: e.message,
+        type: FailureType.internal,
+      ));
     }
   }
 
@@ -84,12 +92,21 @@ class AuthRepository implements IAuthRepository {
 
         return right(session);
       } else {
-        return left(Failure(AppString.internetNotFound));
+        return left(Failure(
+          message: "",
+          type: FailureType.internet,
+        ));
       }
     } on AppwriteException catch (e) {
-      return left(Failure(e.message!));
+      return left(Failure(
+        message: e.message!,
+        type: FailureType.appwrite,
+      ));
     } on ServerException catch (e) {
-      return left(Failure(e.message));
+      return left(Failure(
+        message: e.message,
+        type: FailureType.internal,
+      ));
     }
   }
 
@@ -103,12 +120,21 @@ class AuthRepository implements IAuthRepository {
 
         return right(session);
       } else {
-        return left(Failure(AppString.internetNotFound));
+        return left(Failure(
+          message: "",
+          type: FailureType.internet,
+        ));
       }
     } on AppwriteException catch (e) {
-      return left(Failure(e.message!));
+      return left(Failure(
+        message: e.message!,
+        type: FailureType.appwrite,
+      ));
     } on ServerException catch (e) {
-      return left(Failure(e.message));
+      return left(Failure(
+        message: e.message,
+        type: FailureType.internal,
+      ));
     }
   }
 
@@ -121,12 +147,21 @@ class AuthRepository implements IAuthRepository {
         );
         return null;
       } else {
-        return Failure(AppString.internetNotFound);
+        return Failure(
+          message: "",
+          type: FailureType.internet,
+        );
       }
     } on AppwriteException catch (e) {
-      return Failure(e.message!);
+      return Failure(
+        message: e.message!,
+        type: FailureType.appwrite,
+      );
     } on ServerException catch (e) {
-      return Failure(e.message);
+      return Failure(
+        message: e.message,
+        type: FailureType.internal,
+      );
     }
   }
 }

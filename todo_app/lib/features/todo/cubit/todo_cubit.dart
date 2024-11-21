@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo_app/core/error/failure.dart';
 import 'package:todo_app/core/locators/locator.dart';
 import 'package:todo_app/core/utils/secure_storage_service.dart';
 import 'package:todo_app/core/utils/storage_key.dart';
@@ -22,8 +23,9 @@ class TodoCubit extends Cubit<TodoState> {
     emit(TodoAddEditDeleteLoading());
 
     String userId = await _secureStorageService.getValue(
-      StorageKey.userId,
-    ) ?? "";
+          StorageKey.userId,
+        ) ??
+        "";
 
     final res = await _todoRepository.addTodo(
       userId: userId,
@@ -32,7 +34,7 @@ class TodoCubit extends Cubit<TodoState> {
       isCompleted: isCompleted,
     );
 
-    res.fold((failure) => emit(TodoError(error: failure.message)),
+    res.fold((failure) => emit(TodoError(failure: failure)),
         (document) => emit(TodoAddEditDeleteSuccess()));
   }
 
@@ -40,14 +42,15 @@ class TodoCubit extends Cubit<TodoState> {
     emit(TodoFetchLoading());
 
     String userId = await _secureStorageService.getValue(
-      StorageKey.userId,
-    ) ?? "";
+          StorageKey.userId,
+        ) ??
+        "";
 
     final res = await _todoRepository.getTodo(
       userId: userId,
     );
 
-    res.fold((failure) => emit(TodoError(error: failure.message)),
+    res.fold((failure) => emit(TodoError(failure: failure)),
         (todoModel) => emit(TodoFetchSuccess(todoModel: todoModel)));
   }
 
@@ -66,7 +69,7 @@ class TodoCubit extends Cubit<TodoState> {
       isCompleted: isCompleted,
     );
 
-    res.fold((failure) => emit(TodoError(error: failure.message)),
+    res.fold((failure) => emit(TodoError(failure: failure)),
         (document) => emit(TodoAddEditDeleteSuccess()));
   }
 
@@ -79,7 +82,7 @@ class TodoCubit extends Cubit<TodoState> {
       documentId: documentId,
     );
 
-    res.fold((failure) => emit(TodoError(error: failure.message)),
+    res.fold((failure) => emit(TodoError(failure: failure)),
         (_) => emit(TodoAddEditDeleteSuccess()));
   }
 }

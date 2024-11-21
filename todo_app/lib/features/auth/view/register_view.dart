@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:todo_app/core/error/failure.dart';
+import 'package:todo_app/core/language/translation.dart';
 import 'package:todo_app/core/routes/route_name.dart';
 import 'package:todo_app/core/theme/app_color.dart';
 import 'package:todo_app/core/utils/app_image_url.dart';
-import 'package:todo_app/core/utils/app_string.dart';
 import 'package:todo_app/core/utils/custom_snackbar.dart';
 import 'package:todo_app/core/utils/full_screen_dialog_loader.dart';
 import 'package:todo_app/core/utils/validation_rules.dart';
@@ -47,7 +48,7 @@ class _RegisterViewState extends State<RegisterView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(AppString.register),
+        title: Text(translator(context).titleCreateAccount),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -64,11 +65,20 @@ class _RegisterViewState extends State<RegisterView> {
                 } else if (state is RegisterSuccess) {
                   clearText();
                   FullScreenDialogLoader.cancel(context);
-                  CustomSnackbar.showSuccess(context, AppString.accountCreated);
+                  CustomSnackbar.showSuccess(
+                    context,
+                    translator(context).infoAccountCreated,
+                  );
                   context.goNamed(RouteNames.login);
                 } else if (state is RegisterError) {
                   FullScreenDialogLoader.cancel(context);
-                  CustomSnackbar.showError(context, state.error);
+                  CustomSnackbar.showError(
+                    context,
+                    Failure.createFailureString(
+                      context: context,
+                      failure: state.failure,
+                    ),
+                  );
                 }
               },
               builder: (context, state) {
@@ -88,13 +98,13 @@ class _RegisterViewState extends State<RegisterView> {
                         controller: _firstNameController,
                         validator: (val) {
                           if (val!.isEmpty) {
-                            return AppString.required;
+                            return translator(context).errorFieldRequired;
                           }
                           return null;
                         },
                         keyboardType: TextInputType.name,
                         obsecureText: false,
-                        hintText: AppString.firstName,
+                        hintText: translator(context).hintFirstName,
                         suffix: null,
                       ),
                       const SizedBox(
@@ -104,13 +114,13 @@ class _RegisterViewState extends State<RegisterView> {
                         controller: _lastNameController,
                         validator: (val) {
                           if (val!.isEmpty) {
-                            return AppString.required;
+                            return translator(context).errorFieldRequired;
                           }
                           return null;
                         },
                         keyboardType: TextInputType.name,
                         obsecureText: false,
-                        hintText: AppString.lastName,
+                        hintText: translator(context).hintLastName,
                         suffix: null,
                       ),
                       const SizedBox(
@@ -120,16 +130,16 @@ class _RegisterViewState extends State<RegisterView> {
                         controller: _emailController,
                         validator: (val) {
                           if (val!.isEmpty) {
-                            return AppString.required;
+                            return translator(context).errorFieldRequired;
                           } else if (!ValidationRules.emailValidation
                               .hasMatch(val)) {
-                            return AppString.provideValidEmail;
+                            return translator(context).errorEmailWrong;
                           }
                           return null;
                         },
                         keyboardType: TextInputType.emailAddress,
                         obsecureText: false,
-                        hintText: AppString.email,
+                        hintText: translator(context).hintEmail,
                         suffix: null,
                       ),
                       const SizedBox(
@@ -139,13 +149,13 @@ class _RegisterViewState extends State<RegisterView> {
                         controller: _passwordController,
                         validator: (val) {
                           if (val!.isEmpty) {
-                            return AppString.required;
+                            return translator(context).errorFieldRequired;
                           }
                           return null;
                         },
                         keyboardType: TextInputType.visiblePassword,
                         obsecureText: !isPasswordVisible,
-                        hintText: AppString.password,
+                        hintText: translator(context).hintPassword,
                         suffix: InkWell(
                           onTap: () {
                             setState(() {
@@ -164,7 +174,7 @@ class _RegisterViewState extends State<RegisterView> {
                         height: 10,
                       ),
                       RoundedElevatedButton(
-                        buttonText: AppString.register,
+                        buttonText: translator(context).buttonRegister,
                         onPressed: () {
                           if (_registerFormKey.currentState!.validate()) {
                             context.read<RegisterCubit>().register(

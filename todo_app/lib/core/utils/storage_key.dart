@@ -3,4 +3,5 @@ class StorageKey {
   static const sessionId = "sessionId";
   static const profileImageId = "profileImageId";
   static const themeMode = "themeMode";
+  static const languageCode = "languageCode";
 }

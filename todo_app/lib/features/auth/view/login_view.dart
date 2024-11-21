@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:todo_app/core/error/failure.dart';
+import 'package:todo_app/core/language/translation.dart';
 import 'package:todo_app/core/locators/locator.dart';
 import 'package:todo_app/core/routes/route_name.dart';
 import 'package:todo_app/core/theme/app_color.dart';
 import 'package:todo_app/core/utils/app_image_url.dart';
-import 'package:todo_app/core/utils/app_string.dart';
 import 'package:todo_app/core/utils/custom_snackbar.dart';
 import 'package:todo_app/core/utils/full_screen_dialog_loader.dart';
 import 'package:todo_app/core/utils/secure_storage_service.dart';
@@ -61,7 +62,8 @@ class _LoginViewState extends State<LoginView> {
                 } else if (state is LoginSuccess) {
                   clearText();
                   FullScreenDialogLoader.cancel(context);
-                  CustomSnackbar.showSuccess(context, AppString.success);
+                  CustomSnackbar.showSuccess(
+                      context, translator(context).infoSuccess);
                   _secureStorageService.setValue(
                       StorageKey.userId, state.session.userId);
                   _secureStorageService.setValue(
@@ -69,7 +71,13 @@ class _LoginViewState extends State<LoginView> {
                   context.goNamed(RouteNames.todo);
                 } else if (state is LoginError) {
                   FullScreenDialogLoader.cancel(context);
-                  CustomSnackbar.showError(context, state.error);
+                  CustomSnackbar.showError(
+                    context,
+                    Failure.createFailureString(
+                      context: context,
+                      failure: state.failure,
+                    ),
+                  );
                 }
               },
               builder: (context, state) {
@@ -89,16 +97,16 @@ class _LoginViewState extends State<LoginView> {
                         controller: _emailController,
                         validator: (val) {
                           if (val!.isEmpty) {
-                            return AppString.required;
+                            return translator(context).errorFieldRequired;
                           } else if (!ValidationRules.emailValidation
                               .hasMatch(val)) {
-                            return AppString.provideValidEmail;
+                            return translator(context).errorEmailWrong;
                           }
                           return null;
                         },
                         keyboardType: TextInputType.emailAddress,
                         obsecureText: false,
-                        hintText: AppString.email,
+                        hintText: translator(context).hintEmail,
                         suffix: null,
                       ),
                       const SizedBox(
@@ -108,13 +116,13 @@ class _LoginViewState extends State<LoginView> {
                         controller: _passwordController,
                         validator: (val) {
                           if (val!.isEmpty) {
-                            return AppString.required;
+                            return translator(context).errorFieldRequired;
                           }
                           return null;
                         },
                         keyboardType: TextInputType.visiblePassword,
                         obsecureText: !isPasswordVisible,
-                        hintText: AppString.password,
+                        hintText: translator(context).hintPassword,
                         suffix: InkWell(
                           onTap: () {
                             setState(() {
@@ -141,8 +149,8 @@ class _LoginViewState extends State<LoginView> {
                       ),
                       Row(
                         children: [
-                          const Text(
-                            AppString.saveCredentials,
+                          Text(
+                            translator(context).checkboxSaveCredentials,
                           ),
                           Checkbox(
                             value: saveCredentials,
@@ -155,7 +163,7 @@ class _LoginViewState extends State<LoginView> {
                         ],
                       ),
                       RoundedElevatedButton(
-                        buttonText: AppString.login,
+                        buttonText: translator(context).buttonLogin,
                         onPressed: () {
                           if (_loginFormKey.currentState!.validate()) {
                             context.read<LoginCubit>().login(
@@ -172,7 +180,7 @@ class _LoginViewState extends State<LoginView> {
                           clearText();
                           context.pushNamed(RouteNames.register);
                         },
-                        child: const Text(AppString.createAccount),
+                        child: Text(translator(context).buttonCreateAccount),
                       ),
                     ],
                   ),
