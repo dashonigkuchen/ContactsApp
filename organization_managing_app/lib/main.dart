@@ -1,7 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:organization_managing_app/appwrite/cubit/auth_cubit.dart';
+import 'package:organization_managing_app/core/locator/locator.dart';
+import 'package:organization_managing_app/core/theme/app_theme.dart';
+import 'package:organization_managing_app/pages/login_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
-  runApp(const MainApp());
+  setupLocator();
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => AuthCubit()),
+      ],
+      child: const MainApp(),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {
@@ -9,13 +22,11 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      title: 'Appwrite Auth Demo',
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+      home: const LoginPage(),
+      theme: AppTheme.lightTheme,
     );
   }
 }
