@@ -2,12 +2,11 @@ import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/enums.dart';
 import 'package:appwrite/models.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:organization_managing_app/appwrite/appwrite_provider.dart';
+import 'package:organization_managing_app/data/appwrite_provider.dart';
 import 'package:organization_managing_app/core/error/failure.dart';
 import 'package:organization_managing_app/core/error/server_exception.dart';
 import 'package:organization_managing_app/core/internet/internet_connection_service.dart';
 import 'package:organization_managing_app/core/locator/locator.dart';
-import 'package:organization_managing_app/core/utils/appwrite_constants.dart';
 
 class AuthRepository {
   final AppwriteProvider _appwriteProvider = locator<AppwriteProvider>();
@@ -27,16 +26,6 @@ class AuthRepository {
             email: email,
             password: password,
             name: "$firstName $lastName");
-
-        await _appwriteProvider.database!.createDocument(
-            databaseId: AppwriteConstants.databaseId,
-            collectionId: AppwriteConstants.userCollectionId,
-            documentId: user.$id,
-            data: {
-              "id": user.$id,
-              "name": firstName,
-              "email": email,
-            });
 
         return right(user);
       } else {

@@ -7,20 +7,28 @@ class CustomCircularLoader {
   static void show(
     BuildContext context,
   ) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return const Dialog(
-          backgroundColor: AppColor.transparentColor,
-          child:
-              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-            CircularProgressIndicator(),
-          ]),
-        );
-      },
-    );
-    _isDialogOpen = true;
+    if (!_isDialogOpen) {
+      _isDialogOpen = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (context.mounted) {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            barrierColor: AppColor.transparentColor,
+            builder: (BuildContext context) {
+              return const PopScope(
+                canPop: false,
+                child: Center(
+                  child: CircularProgressIndicator()
+                ),
+              );
+            },
+          ).then((_) {
+            _isDialogOpen = false;
+          });
+        }
+      });
+    }
   }
 
   static void cancel(

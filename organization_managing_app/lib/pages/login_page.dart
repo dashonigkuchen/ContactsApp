@@ -2,13 +2,14 @@ import 'package:appwrite/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:organization_managing_app/appwrite/cubit/auth_cubit.dart';
+import 'package:go_router/go_router.dart';
+import 'package:organization_managing_app/appwrite/auth/cubit/auth_cubit.dart';
+import 'package:organization_managing_app/core/routes/route_names.dart';
 import 'package:organization_managing_app/core/theme/app_color.dart';
 import 'package:organization_managing_app/core/utils/app_images.dart';
 import 'package:organization_managing_app/core/widgets/custom_circular_loader.dart';
 import 'package:organization_managing_app/core/widgets/custom_snackbar.dart';
 import 'package:organization_managing_app/core/widgets/custom_text_form_field.dart';
-import 'package:organization_managing_app/pages/register_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -55,7 +56,7 @@ class LoginPageState extends State<LoginPage> {
               CustomSnackbar.showError(context, state.failure.message);
             } else if (state is AuthSuccess) {
               CustomCircularLoader.cancel(context);
-              // TODO
+              context.goNamed(RouteNames.members);
             }
           },
           builder: (context, state) {
@@ -120,10 +121,7 @@ class LoginPageState extends State<LoginPage> {
                     TextButton(
                       onPressed: () {
                         _reset();
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const RegisterPage()));
+                        context.pushNamed(RouteNames.register);
                       },
                       child: const Text('Create Account'),
                     ),

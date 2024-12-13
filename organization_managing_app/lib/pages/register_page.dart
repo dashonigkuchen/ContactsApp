@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:organization_managing_app/appwrite/cubit/auth_cubit.dart';
+import 'package:organization_managing_app/appwrite/auth/cubit/auth_cubit.dart';
 import 'package:organization_managing_app/core/theme/app_color.dart';
 import 'package:organization_managing_app/core/widgets/custom_circular_loader.dart';
 import 'package:organization_managing_app/core/widgets/custom_snackbar.dart';

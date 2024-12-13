@@ -1,6 +1,6 @@
 import 'package:appwrite/enums.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:organization_managing_app/appwrite/auth_repository.dart';
+import 'package:organization_managing_app/appwrite/auth/auth_repository.dart';
 import 'package:organization_managing_app/core/error/failure.dart';
 import 'package:organization_managing_app/core/locator/locator.dart';
 
