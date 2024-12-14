@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:organization_managing_app/appwrite/auth/cubit/auth_cubit.dart';
-import 'package:organization_managing_app/appwrite/splash/cubit/splash_cubit.dart';
+import 'package:organization_managing_app/features/auth/cubit/auth_cubit.dart';
+import 'package:organization_managing_app/features/paid_membership_fee/cubit/paid_membership_fee_cubit.dart';
+import 'package:organization_managing_app/features/splash/cubit/splash_cubit.dart';
 import 'package:organization_managing_app/core/locator/locator.dart';
 import 'package:organization_managing_app/core/routes/routes.dart';
 import 'package:organization_managing_app/core/theme/app_theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:organization_managing_app/appwrite/members/cubit/members_cubit.dart';
-import 'package:intl/intl_standalone.dart' if (dart.library.html) 'package:intl/intl_browser.dart';
+import 'package:organization_managing_app/features/members/cubit/members_cubit.dart';
+import 'package:intl/intl_standalone.dart'
+    if (dart.library.html) 'package:intl/intl_browser.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +20,7 @@ Future<void> main() async {
         BlocProvider(create: (_) => SplashCubit()),
         BlocProvider(create: (_) => AuthCubit()),
         BlocProvider(create: (_) => MembersCubit()),
+        BlocProvider(create: (_) => PaidMembershipFeeCubit()),
       ],
       child: const MainApp(),
     ),

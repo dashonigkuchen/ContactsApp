@@ -2,7 +2,7 @@ import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/enums.dart';
 import 'package:appwrite/models.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:organization_managing_app/data/appwrite_provider.dart';
+import 'package:organization_managing_app/data/provider/appwrite_provider.dart';
 import 'package:organization_managing_app/core/error/failure.dart';
 import 'package:organization_managing_app/core/error/server_exception.dart';
 import 'package:organization_managing_app/core/internet/internet_connection_service.dart';

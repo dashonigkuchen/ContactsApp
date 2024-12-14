@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:organization_managing_app/core/error/failure.dart';
 import 'package:organization_managing_app/core/locator/locator.dart';
 import 'package:organization_managing_app/data/model/member_model.dart';
-import 'package:organization_managing_app/appwrite/members/members_repository.dart';
+import 'package:organization_managing_app/data/provider/repository/members_repository.dart';
 
 part 'members_state.dart';
 

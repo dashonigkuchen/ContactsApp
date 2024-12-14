@@ -32,7 +32,7 @@ class PaidMembershipFeeModel {
       'id': id,
       'amount': amount,
       'year': year,
-      'paymentDate': paymentDate.millisecondsSinceEpoch,
+      'paymentDate': paymentDate.toString(),
     };
   }
 
@@ -41,7 +41,7 @@ class PaidMembershipFeeModel {
       id: map['id'] as String,
       amount: map['amount'] as double,
       year: map['year'] as int,
-      paymentDate: DateTime.fromMillisecondsSinceEpoch(map['paymentDate'] as int),
+      paymentDate: DateTime.parse(map['paymentDate'] as String),
     );
   }
 

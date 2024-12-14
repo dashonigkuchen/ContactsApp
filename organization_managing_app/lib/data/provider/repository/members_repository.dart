@@ -6,7 +6,7 @@ import 'package:organization_managing_app/core/error/server_exception.dart';
 import 'package:organization_managing_app/core/internet/internet_connection_service.dart';
 import 'package:organization_managing_app/core/locator/locator.dart';
 import 'package:organization_managing_app/core/utils/appwrite_constants.dart';
-import 'package:organization_managing_app/data/appwrite_provider.dart';
+import 'package:organization_managing_app/data/provider/appwrite_provider.dart';
 import 'package:organization_managing_app/data/model/member_model.dart';
 
 class MembersRepository {

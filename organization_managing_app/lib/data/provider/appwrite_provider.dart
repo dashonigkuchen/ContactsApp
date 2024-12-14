@@ -6,11 +6,11 @@ class AppwriteProvider {
   Account? account;
   Databases? database;
 
-  AppwriteProvider()
-  {
-    client.setEndpoint(AppwriteConstants.endpoint)
-    .setProject(AppwriteConstants.projectId)
-    .setSelfSigned(status: true);
+  AppwriteProvider() {
+    client
+        .setEndpoint(AppwriteConstants.endpoint)
+        .setProject(AppwriteConstants.projectId)
+        .setSelfSigned(status: true);
     account = Account(client);
     database = Databases(client);
   }

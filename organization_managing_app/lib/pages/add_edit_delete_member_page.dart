@@ -3,7 +3,8 @@ import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:organization_managing_app/appwrite/members/cubit/members_cubit.dart';
+import 'package:organization_managing_app/core/routes/route_names.dart';
+import 'package:organization_managing_app/features/members/cubit/members_cubit.dart';
 import 'package:organization_managing_app/core/theme/app_color.dart';
 import 'package:organization_managing_app/core/widgets/custom_circular_loader.dart';
 import 'package:organization_managing_app/core/widgets/custom_snackbar.dart';
@@ -24,6 +25,7 @@ class AddEditDeleteMemberPage extends StatefulWidget {
 
 class _AddEditDeleteMemberPageState extends State<AddEditDeleteMemberPage> {
   final _addEditDeleteMemberFormKey = GlobalKey<FormState>();
+  late String _id;
   late TextEditingController _firstNameTextController,
       _lastNameTextController,
       _emailTextController;
@@ -33,6 +35,7 @@ class _AddEditDeleteMemberPageState extends State<AddEditDeleteMemberPage> {
   void initState() {
     super.initState();
 
+    _id = widget.memberModel?.id ?? ID.unique();
     _firstNameTextController = TextEditingController(
       text: widget.memberModel?.firstName ?? "",
     );
@@ -69,10 +72,11 @@ class _AddEditDeleteMemberPageState extends State<AddEditDeleteMemberPage> {
   void _submit() {
     if (_addEditDeleteMemberFormKey.currentState!.validate()) {
       final memberModel = MemberModel(
-        id: _isAdd() ? ID.unique() : widget.memberModel!.id,
+        id: _id,
         firstName: _firstNameTextController.text,
         lastName: _lastNameTextController.text,
-        email: _emailTextController.text == "" ? null : _emailTextController.text,
+        email:
+            _emailTextController.text == "" ? null : _emailTextController.text,
         birthDate: _birthDate,
         entryDate: _entryDate,
       );
@@ -214,6 +218,14 @@ class _AddEditDeleteMemberPageState extends State<AddEditDeleteMemberPage> {
                   ),
                   const SizedBox(
                     height: 10,
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: () => context.pushNamed(
+                      RouteNames.addPaidMembershipFee,
+                      extra: _id,
+                    ),
+                    icon: const Icon(Icons.add),
+                    label: const Text("Add paid membership fee"),
                   ),
                   ElevatedButton.icon(
                     onPressed: _submit,

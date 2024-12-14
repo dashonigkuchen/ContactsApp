@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:organization_managing_app/core/theme/app_color.dart';
 
 class CustomTextFormField extends StatelessWidget {
@@ -12,6 +13,7 @@ class CustomTextFormField extends StatelessWidget {
     required this.suffix,
     this.onFieldSubmitted,
     this.textInputAction,
+    this.formatter,
   });
 
   final TextEditingController controller;
@@ -22,6 +24,7 @@ class CustomTextFormField extends StatelessWidget {
   final Widget? suffix;
   final Function(String)? onFieldSubmitted;
   final TextInputAction? textInputAction;
+  final TextInputFormatter? formatter;
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +69,7 @@ class CustomTextFormField extends StatelessWidget {
       onTapOutside: (event) {
         FocusManager.instance.primaryFocus?.unfocus();
       },
+      inputFormatters: formatter != null ? [formatter!] : null,
     );
   }
 }
