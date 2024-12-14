@@ -6,6 +6,8 @@ final class MembersInitial extends MembersState {}
 
 final class MembersLoading extends MembersState {}
 
+final class MembersAddEditDeleteSuccess extends MembersState {}
+
 final class MembersFetchSuccess extends MembersState {
   final List<MemberModel> membersList;
 

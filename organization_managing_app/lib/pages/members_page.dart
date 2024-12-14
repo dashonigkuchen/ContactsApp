@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:organization_managing_app/core/routes/route_names.dart';
 import 'package:organization_managing_app/core/theme/app_color.dart';
 import 'package:organization_managing_app/appwrite/members/cubit/members_cubit.dart';
+import 'package:organization_managing_app/core/widgets/custom_circular_loader.dart';
 
 class MembersPage extends StatefulWidget {
   const MembersPage({super.key});
@@ -28,8 +29,9 @@ class _MembersPageState extends State<MembersPage> {
       body: BlocBuilder<MembersCubit, MembersState>(
         builder: (context, state) {
           if (state is MembersLoading) {
-            return const Center(child: CircularProgressIndicator());
+            CustomCircularLoader.show(context);
           } else if (state is MembersFetchSuccess) {
+            CustomCircularLoader.cancel(context);
             return state.membersList.isNotEmpty
                 ? ListView.builder(
                     itemCount: state.membersList.length,
@@ -37,7 +39,7 @@ class _MembersPageState extends State<MembersPage> {
                       final member = state.membersList[index];
                       return ListTile(
                         onTap: () => context.pushNamed(
-                          RouteNames.members,
+                          RouteNames.editMember,
                           extra: member,
                         ),
                         title: Text(member.firstName),
@@ -49,6 +51,7 @@ class _MembersPageState extends State<MembersPage> {
                     child: Text("No data found"),
                   );
           } else if (state is MembersError) {
+            CustomCircularLoader.cancel(context);
             return Center(
               child: Text(
                 state.failure.createFailureString(
@@ -62,8 +65,7 @@ class _MembersPageState extends State<MembersPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.goNamed(RouteNames.members);
-          //context.pushNamed(RouteNames.addTodo);
+          context.pushNamed(RouteNames.addMember);
         },
         backgroundColor: AppColor.appColor,
         child: const Icon(Icons.add),

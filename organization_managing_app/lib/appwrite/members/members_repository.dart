@@ -15,27 +15,15 @@ class MembersRepository {
       locator<InternetConnectionService>();
 
   Future<Either<Failure, Document>> addMember({
-    required String firstName,
-    required String lastName,
-    String? email,
-    DateTime? birthDate,
-    DateTime? entryDate,
+    required MemberModel memberModel,
   }) async {
     try {
       if (await _internetConnectionService.hasInternetAccess()) {
-        final uniqueId = ID.unique();
         Document document = await _appwriteProvider.database!.createDocument(
           databaseId: AppwriteConstants.databaseId,
           collectionId: AppwriteConstants.membersCollectionId,
-          documentId: uniqueId,
-          data: {
-            "id": uniqueId,
-            "firstName": firstName,
-            "lastName": lastName,
-            "email": email,
-            "birthDate": birthDate,
-            "entryDate": entryDate,
-          },
+          documentId: memberModel.id,
+          data: memberModel.toMap(),
         );
         return right(document);
       } else {
@@ -69,6 +57,37 @@ class MembersRepository {
         List<MemberModel> memberList =
             d.map((e) => MemberModel.fromMap(e['data'])).toList();
         return right(memberList);
+      } else {
+        return left(Failure(
+          message: "", // Message will be translated
+          type: FailureType.internet,
+        ));
+      }
+    } on AppwriteException catch (e) {
+      return left(Failure(
+        message: e.message!,
+        type: FailureType.appwrite,
+      ));
+    } on ServerException catch (e) {
+      return left(Failure(
+        message: e.message,
+        type: FailureType.internal,
+      ));
+    }
+  }
+
+  Future<Either<Failure, Document>> editMember({
+    required MemberModel memberModel,
+  }) async {
+    try {
+      if (await _internetConnectionService.hasInternetAccess()) {
+        Document document = await _appwriteProvider.database!.updateDocument(
+          databaseId: AppwriteConstants.databaseId,
+          collectionId: AppwriteConstants.membersCollectionId,
+          documentId: memberModel.id,
+          data: memberModel.toMap(),
+        );
+        return right(document);
       } else {
         return left(Failure(
           message: "", // Message will be translated

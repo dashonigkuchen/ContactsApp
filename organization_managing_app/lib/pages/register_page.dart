@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:organization_managing_app/appwrite/auth/cubit/auth_cubit.dart';
+import 'package:organization_managing_app/core/routes/route_names.dart';
 import 'package:organization_managing_app/core/theme/app_color.dart';
 import 'package:organization_managing_app/core/widgets/custom_circular_loader.dart';
 import 'package:organization_managing_app/core/widgets/custom_snackbar.dart';
@@ -48,7 +50,7 @@ class RegisterPageState extends State<RegisterPage> {
               CustomSnackbar.showError(context, state.failure.message);
             } else if (state is AuthSuccess) {
               CustomCircularLoader.cancel(context);
-              // TODO
+              context.goNamed(RouteNames.members);
             }
           },
           builder: (context, state) {

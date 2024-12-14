@@ -41,8 +41,8 @@ class MemberModel {
       'firstName': firstName,
       'lastName': lastName,
       'email': email,
-      'birthDate': birthDate?.millisecondsSinceEpoch,
-      'entryDate': entryDate?.millisecondsSinceEpoch,
+      'birthDate': birthDate?.toString(),
+      'entryDate': entryDate?.toString(),
     };
   }
 
@@ -52,8 +52,8 @@ class MemberModel {
       firstName: map['firstName'] as String,
       lastName: map['lastName'] as String,
       email: map['email'] != null ? map['email'] as String : null,
-      birthDate: map['birthDate'] != null ? DateTime.fromMillisecondsSinceEpoch(map['birthDate'] as int) : null,
-      entryDate: map['entryDate'] != null ? DateTime.fromMillisecondsSinceEpoch(map['entryDate'] as int) : null,
+      birthDate: map['birthDate'] != null ? DateTime.parse(map['birthDate'] as String) : null,
+      entryDate: map['entryDate'] != null ? DateTime.parse(map['entryDate'] as String) : null,
     );
   }
 

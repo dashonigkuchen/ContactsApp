@@ -11,6 +11,19 @@ class MembersCubit extends Cubit<MembersState> {
 
   MembersCubit() : super(MembersInitial());
 
+  void addMember({
+    required MemberModel memberModel,
+  }) async {
+    emit(MembersLoading());
+
+    final res = await _membersRepository.addMember(
+      memberModel: memberModel,
+    );
+
+    res.fold((failure) => emit(MembersError(failure: failure)),
+        (document) => emit(MembersAddEditDeleteSuccess()));
+  }
+
   void getAllMembers() async {
     emit(MembersLoading());
 
@@ -18,5 +31,18 @@ class MembersCubit extends Cubit<MembersState> {
 
     res.fold((failure) => emit(MembersError(failure: failure)),
         (membersList) => emit(MembersFetchSuccess(membersList: membersList)));
+  }
+
+  void editMember({
+    required MemberModel memberModel,
+  }) async {
+    emit(MembersLoading());
+
+    final res = await _membersRepository.editMember(
+      memberModel: memberModel,
+    );
+
+    res.fold((failure) => emit(MembersError(failure: failure)),
+        (document) => emit(MembersAddEditDeleteSuccess()));
   }
 }
