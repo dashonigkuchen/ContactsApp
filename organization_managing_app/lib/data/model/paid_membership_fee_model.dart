@@ -6,11 +6,13 @@ class PaidMembershipFeeModel {
   final double amount;
   final int year;
   final DateTime paymentDate;
+  final String memberId;
   PaidMembershipFeeModel({
     required this.id,
     required this.amount,
     required this.year,
     required this.paymentDate,
+    required this.memberId,
   });
 
   PaidMembershipFeeModel copyWith({
@@ -18,12 +20,14 @@ class PaidMembershipFeeModel {
     double? amount,
     int? year,
     DateTime? paymentDate,
+    String? memberId,
   }) {
     return PaidMembershipFeeModel(
       id: id ?? this.id,
       amount: amount ?? this.amount,
       year: year ?? this.year,
       paymentDate: paymentDate ?? this.paymentDate,
+      memberId: memberId ?? this.memberId,
     );
   }
 
@@ -33,15 +37,18 @@ class PaidMembershipFeeModel {
       'amount': amount,
       'year': year,
       'paymentDate': paymentDate.toString(),
+      'memberId': memberId,
     };
   }
 
   factory PaidMembershipFeeModel.fromMap(Map<String, dynamic> map) {
+    final amount = map['amount'] as num;
     return PaidMembershipFeeModel(
       id: map['id'] as String,
-      amount: map['amount'] as double,
+      amount: amount.toDouble(),
       year: map['year'] as int,
       paymentDate: DateTime.parse(map['paymentDate'] as String),
+      memberId: map['memberId'] as String,
     );
   }
 
@@ -51,7 +58,7 @@ class PaidMembershipFeeModel {
 
   @override
   String toString() {
-    return 'PaidMembershipFee(id: $id, amount: $amount, year: $year, paymentDate: $paymentDate)';
+    return 'PaidMembershipFeeModel(id: $id, amount: $amount, year: $year, paymentDate: $paymentDate, memberId: $memberId)';
   }
 
   @override
@@ -62,7 +69,8 @@ class PaidMembershipFeeModel {
       other.id == id &&
       other.amount == amount &&
       other.year == year &&
-      other.paymentDate == paymentDate;
+      other.paymentDate == paymentDate &&
+      other.memberId == memberId;
   }
 
   @override
@@ -70,6 +78,7 @@ class PaidMembershipFeeModel {
     return id.hashCode ^
       amount.hashCode ^
       year.hashCode ^
-      paymentDate.hashCode;
+      paymentDate.hashCode ^
+      memberId.hashCode;
   }
 }

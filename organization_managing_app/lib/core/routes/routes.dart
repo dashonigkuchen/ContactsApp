@@ -51,7 +51,7 @@ final GoRouter router = GoRouter(
       builder: (context, state) {
         final id = state.extra as String;
         return AddPaidMembershipFeePage(
-          id: id,
+          memberId: id,
         );
       },
     ),

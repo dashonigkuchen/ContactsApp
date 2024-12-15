@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:organization_managing_app/core/routes/route_names.dart';
 import 'package:organization_managing_app/core/theme/app_color.dart';
+import 'package:organization_managing_app/data/model/paid_membership_fee_model.dart';
 import 'package:organization_managing_app/features/members/cubit/members_cubit.dart';
 import 'package:organization_managing_app/core/widgets/custom_circular_loader.dart';
+import 'package:organization_managing_app/pages/common/app_navigation_drawer.dart';
 
 class MembersPage extends StatefulWidget {
   const MembersPage({super.key});
@@ -26,6 +28,7 @@ class _MembersPageState extends State<MembersPage> {
       appBar: AppBar(
         title: const Text("Members"),
       ),
+      drawer: const AppNavigationDrawer(),
       body: BlocBuilder<MembersCubit, MembersState>(
         builder: (context, state) {
           if (state is MembersLoading) {
@@ -37,6 +40,19 @@ class _MembersPageState extends State<MembersPage> {
                     itemCount: state.membersList.length,
                     itemBuilder: (context, index) {
                       final member = state.membersList[index];
+                      state.paidMembershipFeeList
+                          .sort((a, b) => b.year.compareTo(a.year));
+                      final PaidMembershipFeeModel paidMembershipFee =
+                          state.paidMembershipFeeList.firstWhere(
+                        (element) => element.memberId == member.id,
+                        orElse: () => PaidMembershipFeeModel(
+                          id: "",
+                          amount: 0,
+                          year: 0,
+                          paymentDate: DateTime.now(),
+                          memberId: "",
+                        ),
+                      );
                       return ListTile(
                         onTap: () => context.pushNamed(
                           RouteNames.editMember,
@@ -44,6 +60,22 @@ class _MembersPageState extends State<MembersPage> {
                         ),
                         title: Text(member.firstName),
                         subtitle: Text(member.lastName),
+                        trailing: paidMembershipFee.id.isNotEmpty
+                            ? Text(
+                                paidMembershipFee.year.toString(),
+                                style: TextStyle(
+                                  color: paidMembershipFee.year ==
+                                          DateTime.now().year
+                                      ? AppColor.snackBarGreen
+                                      : AppColor.snackBarRed,
+                                ),
+                              )
+                            : const Text(
+                                "Not paid yet",
+                                style: TextStyle(
+                                  color: AppColor.snackBarRed,
+                                ),
+                              ),
                       );
                     },
                   )

@@ -106,4 +106,35 @@ class MembersRepository {
       ));
     }
   }
+
+  Future<Either<Failure, dynamic>> deleteMember({
+    required String documentId,
+  }) async {
+    try {
+      if (await _internetConnectionService.hasInternetAccess()) {
+        var response = await _appwriteProvider.database!.deleteDocument(
+          databaseId: AppwriteConstants.databaseId,
+          collectionId: AppwriteConstants.membersCollectionId,
+          documentId: documentId,
+        );
+        
+        return right(response);
+      } else {
+       return left(Failure(
+          message: "", // Message will be translated
+          type: FailureType.internet,
+        ));
+      }
+    } on AppwriteException catch (e) {
+      return left(Failure(
+        message: e.message!,
+        type: FailureType.appwrite,
+      ));
+    } on ServerException catch (e) {
+      return left(Failure(
+        message: e.message,
+        type: FailureType.internal,
+      ));
+    }
+  }
 }

@@ -1,3 +1,4 @@
+import 'package:appwrite/appwrite.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
@@ -10,10 +11,10 @@ import 'package:organization_managing_app/data/model/paid_membership_fee_model.d
 import 'package:organization_managing_app/features/paid_membership_fee/cubit/paid_membership_fee_cubit.dart';
 
 class AddPaidMembershipFeePage extends StatefulWidget {
-  final String id;
+  final String memberId;
   const AddPaidMembershipFeePage({
     super.key,
-    required this.id,
+    required this.memberId,
   });
 
   @override
@@ -163,10 +164,11 @@ class _AddPaidMembershipFeePageState extends State<AddPaidMembershipFeePage> {
                   ElevatedButton.icon(
                     onPressed: () {
                       final paidMembershipFeeModel = PaidMembershipFeeModel(
-                        id: widget.id,
+                        id: ID.unique(),
                         amount: _currencyTextInputFormatter.getDouble(),
                         year: _year,
                         paymentDate: _paymentDate,
+                        memberId: widget.memberId,
                       );
                       context
                           .read<PaidMembershipFeeCubit>()

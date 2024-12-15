@@ -98,9 +98,32 @@ class _AddEditDeleteMemberPageState extends State<AddEditDeleteMemberPage> {
           if (!_isAdd())
             IconButton(
               onPressed: () {
-                //_deleteTodo(
-                //  documentId: widget.todoModel!.id,
-                //);
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text("Are you sure to delete?"),
+                      actionsAlignment: MainAxisAlignment.spaceBetween,
+                      actions: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('Cancel'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            context.read<MembersCubit>().deleteMember(
+                                  memberModel: widget.memberModel!,
+                                );
+                          },
+                          child: const Text('Ok'),
+                        ),
+                      ],
+                    );
+                  },
+                );
               },
               icon: const Icon(
                 Icons.delete,
