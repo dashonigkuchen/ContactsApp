@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:organization_managing_app/core/routes/route_names.dart';
 import 'package:organization_managing_app/core/theme/app_color.dart';
+import 'package:organization_managing_app/data/model/member_model.dart';
 import 'package:organization_managing_app/data/model/paid_membership_fee_model.dart';
 import 'package:organization_managing_app/features/members/cubit/members_cubit.dart';
 import 'package:organization_managing_app/core/widgets/custom_circular_loader.dart';
@@ -20,6 +21,49 @@ class _MembersPageState extends State<MembersPage> {
   void initState() {
     context.read<MembersCubit>().getAllMembers();
     super.initState();
+  }
+
+  Widget? _getListTileTrailing({
+    required MemberModel member,
+    required List<PaidMembershipFeeModel> paidMembershipFeeList,
+  }) {
+    if (member.isHonoraryMember) {
+      return const Text("Honorary Member",
+          style: TextStyle(
+            color: AppColor.snackBarGreen,
+          ));
+    }
+
+    paidMembershipFeeList.sort((a, b) => b.year.compareTo(a.year));
+    final PaidMembershipFeeModel paidMembershipFee =
+        paidMembershipFeeList.firstWhere(
+      (element) => element.memberId == member.id,
+      orElse: () => PaidMembershipFeeModel(
+        id: "",
+        amount: -1,
+        year: -1,
+        paymentDate: DateTime(-1),
+        memberId: "",
+      ),
+    );
+
+    if (paidMembershipFee.year < 0) {
+      return const Text(
+        "Not paid yet",
+        style: TextStyle(
+          color: AppColor.snackBarRed,
+        ),
+      );
+    }
+
+    return Text(
+      paidMembershipFee.year.toString(),
+      style: TextStyle(
+        color: paidMembershipFee.year == DateTime.now().year
+            ? AppColor.snackBarGreen
+            : AppColor.snackBarRed,
+      ),
+    );
   }
 
   @override
@@ -40,19 +84,6 @@ class _MembersPageState extends State<MembersPage> {
                     itemCount: state.membersList.length,
                     itemBuilder: (context, index) {
                       final member = state.membersList[index];
-                      state.paidMembershipFeeList
-                          .sort((a, b) => b.year.compareTo(a.year));
-                      final PaidMembershipFeeModel paidMembershipFee =
-                          state.paidMembershipFeeList.firstWhere(
-                        (element) => element.memberId == member.id,
-                        orElse: () => PaidMembershipFeeModel(
-                          id: "",
-                          amount: 0,
-                          year: 0,
-                          paymentDate: DateTime.now(),
-                          memberId: "",
-                        ),
-                      );
                       return ListTile(
                         onTap: () => context.pushNamed(
                           RouteNames.editMember,
@@ -60,22 +91,10 @@ class _MembersPageState extends State<MembersPage> {
                         ),
                         title: Text(member.firstName),
                         subtitle: Text(member.lastName),
-                        trailing: paidMembershipFee.id.isNotEmpty
-                            ? Text(
-                                paidMembershipFee.year.toString(),
-                                style: TextStyle(
-                                  color: paidMembershipFee.year ==
-                                          DateTime.now().year
-                                      ? AppColor.snackBarGreen
-                                      : AppColor.snackBarRed,
-                                ),
-                              )
-                            : const Text(
-                                "Not paid yet",
-                                style: TextStyle(
-                                  color: AppColor.snackBarRed,
-                                ),
-                              ),
+                        trailing: _getListTileTrailing(
+                          member: member,
+                          paidMembershipFeeList: state.paidMembershipFeeList,
+                        ),
                       );
                     },
                   )

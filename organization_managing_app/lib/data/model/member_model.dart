@@ -8,6 +8,7 @@ class MemberModel {
   final String? email;
   final DateTime? birthDate;
   final DateTime? entryDate;
+  final bool isHonoraryMember;
   MemberModel({
     required this.id,
     required this.firstName,
@@ -15,6 +16,7 @@ class MemberModel {
     this.email,
     this.birthDate,
     this.entryDate,
+    required this.isHonoraryMember,
   });
 
   MemberModel copyWith({
@@ -24,6 +26,7 @@ class MemberModel {
     String? email,
     DateTime? birthDate,
     DateTime? entryDate,
+    bool? isHonoraryMember,
   }) {
     return MemberModel(
       id: id ?? this.id,
@@ -32,6 +35,7 @@ class MemberModel {
       email: email ?? this.email,
       birthDate: birthDate ?? this.birthDate,
       entryDate: entryDate ?? this.entryDate,
+      isHonoraryMember: isHonoraryMember ?? this.isHonoraryMember,
     );
   }
 
@@ -43,6 +47,7 @@ class MemberModel {
       'email': email,
       'birthDate': birthDate?.toString(),
       'entryDate': entryDate?.toString(),
+      'isHonoraryMember': isHonoraryMember,
     };
   }
 
@@ -54,6 +59,7 @@ class MemberModel {
       email: map['email'] != null ? map['email'] as String : null,
       birthDate: map['birthDate'] != null ? DateTime.parse(map['birthDate'] as String) : null,
       entryDate: map['entryDate'] != null ? DateTime.parse(map['entryDate'] as String) : null,
+      isHonoraryMember:  map['isHonoraryMember'] as bool,
     );
   }
 
@@ -63,7 +69,7 @@ class MemberModel {
 
   @override
   String toString() {
-    return 'MemberModel(id: $id, firstName: $firstName, lastName: $lastName, email: $email, birthDate: $birthDate, entryDate: $entryDate)';
+    return 'MemberModel(id: $id, firstName: $firstName, lastName: $lastName, email: $email, birthDate: $birthDate, entryDate: $entryDate, isHonoraryMember: $isHonoraryMember)';
   }
 
   @override
@@ -76,7 +82,8 @@ class MemberModel {
       other.lastName == lastName &&
       other.email == email &&
       other.birthDate == birthDate &&
-      other.entryDate == entryDate;
+      other.entryDate == entryDate &&
+      other.isHonoraryMember == isHonoraryMember;
   }
 
   @override
@@ -86,6 +93,7 @@ class MemberModel {
       lastName.hashCode ^
       email.hashCode ^
       birthDate.hashCode ^
-      entryDate.hashCode;
+      entryDate.hashCode ^
+      isHonoraryMember.hashCode;
   }
 }

@@ -30,6 +30,7 @@ class _AddEditDeleteMemberPageState extends State<AddEditDeleteMemberPage> {
       _lastNameTextController,
       _emailTextController;
   late DateTime? _birthDate, _entryDate;
+  late bool _isHonoraryMember;
 
   @override
   void initState() {
@@ -47,6 +48,7 @@ class _AddEditDeleteMemberPageState extends State<AddEditDeleteMemberPage> {
     );
     _birthDate = widget.memberModel?.birthDate;
     _entryDate = widget.memberModel?.entryDate;
+    _isHonoraryMember = widget.memberModel?.isHonoraryMember ?? false;
   }
 
   @override
@@ -79,6 +81,7 @@ class _AddEditDeleteMemberPageState extends State<AddEditDeleteMemberPage> {
             _emailTextController.text == "" ? null : _emailTextController.text,
         birthDate: _birthDate,
         entryDate: _entryDate,
+        isHonoraryMember: _isHonoraryMember,
       );
 
       if (_isAdd()) {
@@ -242,14 +245,27 @@ class _AddEditDeleteMemberPageState extends State<AddEditDeleteMemberPage> {
                   const SizedBox(
                     height: 10,
                   ),
-                  ElevatedButton.icon(
-                    onPressed: () => context.pushNamed(
-                      RouteNames.addPaidMembershipFee,
-                      extra: _id,
-                    ),
-                    icon: const Icon(Icons.add),
-                    label: const Text("Add paid membership fee"),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text("Is honorary member?"),
+                      Checkbox(
+                        value: _isHonoraryMember,
+                        onChanged: (val) => setState(() {
+                          _isHonoraryMember = val!;
+                        }),
+                      ),
+                    ],
                   ),
+                  if (!_isAdd() && !_isHonoraryMember)
+                    ElevatedButton.icon(
+                      onPressed: () => context.pushNamed(
+                        RouteNames.addPaidMembershipFee,
+                        extra: _id,
+                      ),
+                      icon: const Icon(Icons.add),
+                      label: const Text("Add paid membership fee"),
+                    ),
                   ElevatedButton.icon(
                     onPressed: _submit,
                     icon: const Icon(Icons.save),
