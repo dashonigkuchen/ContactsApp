@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:organization_managing_app/core/theme/theme_provider.dart';
 import 'package:organization_managing_app/features/auth/cubit/auth_cubit.dart';
 import 'package:organization_managing_app/features/paid_membership_fee/cubit/paid_membership_fee_cubit.dart';
 import 'package:organization_managing_app/features/splash/cubit/splash_cubit.dart';
@@ -9,20 +10,28 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:organization_managing_app/features/members/cubit/members_cubit.dart';
 import 'package:intl/intl_standalone.dart'
     if (dart.library.html) 'package:intl/intl_browser.dart';
+import 'package:provider/provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await findSystemLocale();
   setupLocator();
   runApp(
-    MultiBlocProvider(
+    MultiProvider(
       providers: [
-        BlocProvider(create: (_) => SplashCubit()),
-        BlocProvider(create: (_) => AuthCubit()),
-        BlocProvider(create: (_) => MembersCubit()),
-        BlocProvider(create: (_) => PaidMembershipFeeCubit()),
+        ChangeNotifierProvider(
+          create: (_) => ThemeProvider(),
+        )
       ],
-      child: const MainApp(),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (_) => SplashCubit()),
+          BlocProvider(create: (_) => AuthCubit()),
+          BlocProvider(create: (_) => MembersCubit()),
+          BlocProvider(create: (_) => PaidMembershipFeeCubit()),
+        ],
+        child: const MainApp(),
+      ),
     ),
   );
 }
@@ -36,6 +45,8 @@ class MainApp extends StatelessWidget {
       title: 'Organization Managing App',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: Provider.of<ThemeProvider>(context).themeMode,
       routerConfig: router,
     );
   }

@@ -6,6 +6,7 @@ import 'package:organization_managing_app/pages/add_paid_membership_fee_page.dar
 import 'package:organization_managing_app/pages/login_page.dart';
 import 'package:organization_managing_app/pages/members_page.dart';
 import 'package:organization_managing_app/pages/register_page.dart';
+import 'package:organization_managing_app/pages/settings_page.dart';
 import 'package:organization_managing_app/pages/splash_page.dart';
 
 final GoRouter router = GoRouter(
@@ -54,6 +55,11 @@ final GoRouter router = GoRouter(
           memberId: id,
         );
       },
+    ),
+    GoRoute(
+      name: RouteNames.settings,
+      path: "/settings",
+      builder: (context, state) => const SettingsPage(),
     ),
   ],
 );

@@ -58,7 +58,7 @@ class AppNavigationDrawer extends StatelessWidget {
                 title: const Text("Settings"),
                 onTap: () {
                   Navigator.of(context).pop();
-                  //context.pushNamed(RouteNames.settings);
+                  context.pushNamed(RouteNames.settings);
                 },
               ),
               ListTile(
