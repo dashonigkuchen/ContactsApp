@@ -9,6 +9,7 @@ class MemberModel {
   final DateTime? birthDate;
   final DateTime? entryDate;
   final bool isHonoraryMember;
+  final String? noMembershipFeeNeededReason;
   MemberModel({
     required this.id,
     required this.firstName,
@@ -17,6 +18,7 @@ class MemberModel {
     this.birthDate,
     this.entryDate,
     required this.isHonoraryMember,
+    this.noMembershipFeeNeededReason,
   });
 
   MemberModel copyWith({
@@ -27,6 +29,7 @@ class MemberModel {
     DateTime? birthDate,
     DateTime? entryDate,
     bool? isHonoraryMember,
+    String? noMembershipFeeNeededReason,
   }) {
     return MemberModel(
       id: id ?? this.id,
@@ -36,6 +39,7 @@ class MemberModel {
       birthDate: birthDate ?? this.birthDate,
       entryDate: entryDate ?? this.entryDate,
       isHonoraryMember: isHonoraryMember ?? this.isHonoraryMember,
+      noMembershipFeeNeededReason: noMembershipFeeNeededReason ?? this.noMembershipFeeNeededReason,
     );
   }
 
@@ -45,9 +49,10 @@ class MemberModel {
       'firstName': firstName,
       'lastName': lastName,
       'email': email,
-      'birthDate': birthDate?.toString(),
-      'entryDate': entryDate?.toString(),
+      'birthDate': birthDate?.millisecondsSinceEpoch,
+      'entryDate': entryDate?.millisecondsSinceEpoch,
       'isHonoraryMember': isHonoraryMember,
+      'noMembershipFeeNeededReason': noMembershipFeeNeededReason,
     };
   }
 
@@ -57,9 +62,10 @@ class MemberModel {
       firstName: map['firstName'] as String,
       lastName: map['lastName'] as String,
       email: map['email'] != null ? map['email'] as String : null,
-      birthDate: map['birthDate'] != null ? DateTime.parse(map['birthDate'] as String) : null,
-      entryDate: map['entryDate'] != null ? DateTime.parse(map['entryDate'] as String) : null,
-      isHonoraryMember:  map['isHonoraryMember'] as bool,
+      birthDate: map['birthDate'] != null ? DateTime.fromMillisecondsSinceEpoch(map['birthDate'] as int) : null,
+      entryDate: map['entryDate'] != null ? DateTime.fromMillisecondsSinceEpoch(map['entryDate'] as int) : null,
+      isHonoraryMember: map['isHonoraryMember'] as bool,
+      noMembershipFeeNeededReason: map['noMembershipFeeNeededReason'] != null ? map['noMembershipFeeNeededReason'] as String : null,
     );
   }
 
@@ -69,7 +75,7 @@ class MemberModel {
 
   @override
   String toString() {
-    return 'MemberModel(id: $id, firstName: $firstName, lastName: $lastName, email: $email, birthDate: $birthDate, entryDate: $entryDate, isHonoraryMember: $isHonoraryMember)';
+    return 'MemberModel(id: $id, firstName: $firstName, lastName: $lastName, email: $email, birthDate: $birthDate, entryDate: $entryDate, isHonoraryMember: $isHonoraryMember, noMembershipFeeNeededReason: $noMembershipFeeNeededReason)';
   }
 
   @override
@@ -83,7 +89,8 @@ class MemberModel {
       other.email == email &&
       other.birthDate == birthDate &&
       other.entryDate == entryDate &&
-      other.isHonoraryMember == isHonoraryMember;
+      other.isHonoraryMember == isHonoraryMember &&
+      other.noMembershipFeeNeededReason == noMembershipFeeNeededReason;
   }
 
   @override
@@ -94,6 +101,7 @@ class MemberModel {
       email.hashCode ^
       birthDate.hashCode ^
       entryDate.hashCode ^
-      isHonoraryMember.hashCode;
+      isHonoraryMember.hashCode ^
+      noMembershipFeeNeededReason.hashCode;
   }
 }

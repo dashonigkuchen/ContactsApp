@@ -90,28 +90,39 @@ class _MembersPageState extends State<MembersPage> {
             CustomCircularLoader.show(context);
           } else if (state is MembersFetchSuccess) {
             CustomCircularLoader.cancel(context);
-            return state.membersList.isNotEmpty
-                ? ListView.builder(
-                    itemCount: state.membersList.length,
-                    itemBuilder: (context, index) {
-                      final member = state.membersList[index];
-                      return ListTile(
-                        onTap: () => context.pushNamed(
-                          RouteNames.editMember,
-                          extra: member,
+            return RefreshIndicator(
+              onRefresh: () async {
+                context.read<MembersCubit>().getAllMembers();
+              },
+              child: state.membersList.isNotEmpty
+                  ? ListView.builder(
+                      itemCount: state.membersList.length,
+                      itemBuilder: (context, index) {
+                        final member = state.membersList[index];
+                        return ListTile(
+                          onTap: () => context.pushNamed(
+                            RouteNames.editMember,
+                            extra: member,
+                          ),
+                          title: Text(member.firstName),
+                          subtitle: Text(member.lastName),
+                          trailing: _getListTileTrailing(
+                            member: member,
+                            paidMembershipFeeList: state.paidMembershipFeeList,
+                          ),
+                        );
+                      },
+                    )
+                  : CustomScrollView(
+                      slivers: <Widget>[
+                        SliverFillRemaining(
+                          child: const Center(
+                            child: Text("No data found"),
+                          ),
                         ),
-                        title: Text(member.firstName),
-                        subtitle: Text(member.lastName),
-                        trailing: _getListTileTrailing(
-                          member: member,
-                          paidMembershipFeeList: state.paidMembershipFeeList,
-                        ),
-                      );
-                    },
-                  )
-                : const Center(
-                    child: Text("No data found"),
-                  );
+                      ],
+                    ),
+            );
           } else if (state is MembersError) {
             CustomCircularLoader.cancel(context);
             return Center(

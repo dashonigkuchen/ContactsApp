@@ -36,18 +36,17 @@ class PaidMembershipFeeModel {
       'id': id,
       'amount': amount,
       'year': year,
-      'paymentDate': paymentDate.toString(),
+      'paymentDate': paymentDate.millisecondsSinceEpoch,
       'memberId': memberId,
     };
   }
 
   factory PaidMembershipFeeModel.fromMap(Map<String, dynamic> map) {
-    final amount = map['amount'] as num;
     return PaidMembershipFeeModel(
       id: map['id'] as String,
-      amount: amount.toDouble(),
+      amount: map['amount'] as double,
       year: map['year'] as int,
-      paymentDate: DateTime.parse(map['paymentDate'] as String),
+      paymentDate: DateTime.fromMillisecondsSinceEpoch(map['paymentDate'] as int),
       memberId: map['memberId'] as String,
     );
   }
