@@ -5,13 +5,13 @@ import 'package:organization_managing_app/core/internet/internet_connection_serv
 import 'package:organization_managing_app/core/storage/secure_storage_service.dart';
 import 'package:organization_managing_app/data/provider/repository/members_repository.dart';
 import 'package:organization_managing_app/data/provider/repository/paid_membership_fee_repository.dart';
+import 'package:organization_managing_app/features/members/members_filter_container.dart';
 
 final locator = GetIt.I;
 
-void setupLocator()
-{
+void setupLocator() {
   locator.registerLazySingleton<InternetConnectionService>(
-   () => InternetConnectionService(),
+    () => InternetConnectionService(),
   );
 
   locator.registerLazySingleton<SecureStorageService>(
@@ -32,5 +32,11 @@ void setupLocator()
 
   locator.registerLazySingleton<PaidMembershipFeeRepository>(
     () => PaidMembershipFeeRepository(),
+  );
+
+  locator.registerLazySingleton<MembersFilterContainer>(
+    () => MembersFilterContainer(
+      secureStorageService: locator.get<SecureStorageService>(),
+    ),
   );
 }

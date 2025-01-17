@@ -28,10 +28,14 @@ class MembersCubit extends Cubit<MembersState> {
         (document) => emit(MembersAddEditDeleteSuccess()));
   }
 
-  void getAllMembers() async {
+  void getAllMembers({
+    List<String>? queries,
+  }) async {
     emit(MembersLoading());
 
-    final resMembers = await _membersRepository.getAllMembers();
+    final resMembers = await _membersRepository.getAllMembers(
+      queries: queries,
+    );
     final resMembershipFees =
         await _paidMembershipFeeRepository.getAllPaidMembershipFees();
 

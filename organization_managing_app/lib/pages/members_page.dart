@@ -71,8 +71,19 @@ class _MembersPageState extends State<MembersPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Members"),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.filter_list,
+            ),
+            onPressed: () {
+              context.pushNamed(RouteNames.filterMembers);
+            },
+          )
+        ],
       ),
       drawer: const AppNavigationDrawer(),
+      drawerScrimColor: AppColor.transparentColor,
       body: BlocBuilder<MembersCubit, MembersState>(
         builder: (context, state) {
           if (state is MembersLoading) {

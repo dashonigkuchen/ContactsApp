@@ -4,10 +4,12 @@ import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:organization_managing_app/core/routes/route_names.dart';
 import 'package:organization_managing_app/core/widgets/custom_circular_loader.dart';
 import 'package:organization_managing_app/core/widgets/custom_snackbar.dart';
 import 'package:organization_managing_app/core/widgets/custom_text_form_field.dart';
 import 'package:organization_managing_app/data/model/paid_membership_fee_model.dart';
+import 'package:organization_managing_app/features/members/cubit/members_cubit.dart';
 import 'package:organization_managing_app/features/paid_membership_fee/cubit/paid_membership_fee_cubit.dart';
 
 class AddPaidMembershipFeePage extends StatefulWidget {
@@ -60,7 +62,8 @@ class _AddPaidMembershipFeePageState extends State<AddPaidMembershipFeePage> {
                 context,
                 "Success",
               );
-              context.pop();
+              context.goNamed(RouteNames.members);
+              context.read<MembersCubit>().getAllMembers();
             } else if (state is PaidMembershipFeeError) {
               CustomCircularLoader.cancel(context);
               CustomSnackbar.showError(

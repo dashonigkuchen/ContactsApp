@@ -45,12 +45,16 @@ class MembersRepository {
     }
   }
 
-  Future<Either<Failure, List<MemberModel>>> getAllMembers() async {
+  Future<Either<Failure, List<MemberModel>>> getAllMembers({
+    List<String>? queries,
+  }) async {
     try {
       if (await _internetConnectionService.hasInternetAccess()) {
-        DocumentList documents = await _appwriteProvider.database!.listDocuments(
+        DocumentList documents =
+            await _appwriteProvider.database!.listDocuments(
           databaseId: AppwriteConstants.databaseId,
           collectionId: AppwriteConstants.membersCollectionId,
+          queries: queries,
         );
         Map<String, dynamic> data = documents.toMap();
         List d = data['documents'].toList();
@@ -117,10 +121,10 @@ class MembersRepository {
           collectionId: AppwriteConstants.membersCollectionId,
           documentId: documentId,
         );
-        
+
         return right(response);
       } else {
-       return left(Failure(
+        return left(Failure(
           message: "", // Message will be translated
           type: FailureType.internet,
         ));

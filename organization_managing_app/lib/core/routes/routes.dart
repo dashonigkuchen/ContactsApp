@@ -4,6 +4,7 @@ import 'package:organization_managing_app/data/model/member_model.dart';
 import 'package:organization_managing_app/pages/add_edit_delete_member_page.dart';
 import 'package:organization_managing_app/pages/add_paid_membership_fee_page.dart';
 import 'package:organization_managing_app/pages/login_page.dart';
+import 'package:organization_managing_app/pages/members_filter_page.dart';
 import 'package:organization_managing_app/pages/members_page.dart';
 import 'package:organization_managing_app/pages/register_page.dart';
 import 'package:organization_managing_app/pages/settings_page.dart';
@@ -60,6 +61,11 @@ final GoRouter router = GoRouter(
       name: RouteNames.settings,
       path: "/settings",
       builder: (context, state) => const SettingsPage(),
+    ),
+    GoRoute(
+      name: RouteNames.filterMembers,
+      path: "/filterMembers",
+      builder: (context, state) => const MembersFilterPage(),
     ),
   ],
 );

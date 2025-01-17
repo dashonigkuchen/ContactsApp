@@ -7,4 +7,5 @@ class RouteNames {
   static String get editMember => "editMember";
   static String get addPaidMembershipFee => "addPaidMembershipFee";
   static String get settings => "settings";
+  static String get filterMembers => "filterMembers";
 }
