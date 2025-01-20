@@ -15,3 +15,13 @@ final class PaidMembershipFeeError extends PaidMembershipFeeState {
     required this.failure,
   });
 }
+
+final class PaidMembershipFeeFetchSuccess extends PaidMembershipFeeState {
+  final List<PaidMembershipFeeModel> paidMembershipFeeList;
+  final List<MemberModel> membersList;
+
+  PaidMembershipFeeFetchSuccess({
+    required this.paidMembershipFeeList,
+    required this.membersList,
+  });
+}

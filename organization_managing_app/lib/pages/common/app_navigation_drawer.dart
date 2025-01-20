@@ -10,6 +10,15 @@ import 'package:organization_managing_app/features/auth/cubit/auth_cubit.dart';
 class AppNavigationDrawer extends StatelessWidget {
   const AppNavigationDrawer({super.key});
 
+  void _redirectToPage(BuildContext context, String selectedRoute) {
+    final currentPath =
+        GoRouter.of(context).routeInformationProvider.value.uri.path;
+    Navigator.of(context).pop();
+    if (currentPath.substring(1) != selectedRoute) {
+      context.goNamed(selectedRoute);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -48,18 +57,24 @@ class AppNavigationDrawer extends StatelessWidget {
                 child: const Text(
                   "Menu",
                   style: TextStyle(
-                    //color: Colors.white,
                     fontSize: 25,
                   ),
                 ),
               ),
               ListTile(
+                leading: const Icon(Icons.pages),
+                title: const Text("Members"),
+                onTap: () => _redirectToPage(context, RouteNames.members),
+              ),
+              ListTile(
+                leading: const Icon(Icons.money),
+                title: const Text("Paid Membership Fees"),
+                onTap: () => _redirectToPage(context, RouteNames.paidMembershipFee),
+              ),
+              ListTile(
                 leading: const Icon(Icons.settings),
                 title: const Text("Settings"),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  context.pushNamed(RouteNames.settings);
-                },
+                onTap: () => _redirectToPage(context, RouteNames.settings),
               ),
               ListTile(
                 leading: const Icon(Icons.exit_to_app),

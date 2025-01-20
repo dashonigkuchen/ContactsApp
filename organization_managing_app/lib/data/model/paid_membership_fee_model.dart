@@ -44,7 +44,7 @@ class PaidMembershipFeeModel {
   factory PaidMembershipFeeModel.fromMap(Map<String, dynamic> map) {
     return PaidMembershipFeeModel(
       id: map['id'] as String,
-      amount: map['amount'] as double,
+      amount: (map['amount'] as num).toDouble(),
       year: map['year'] as int,
       paymentDate: DateTime.fromMillisecondsSinceEpoch(map['paymentDate'] as int),
       memberId: map['memberId'] as String,

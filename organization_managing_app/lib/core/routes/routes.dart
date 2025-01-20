@@ -2,10 +2,11 @@ import 'package:go_router/go_router.dart';
 import 'package:organization_managing_app/core/routes/route_names.dart';
 import 'package:organization_managing_app/data/model/member_model.dart';
 import 'package:organization_managing_app/pages/add_edit_delete_member_page.dart';
-import 'package:organization_managing_app/pages/add_paid_membership_fee_page.dart';
+import 'package:organization_managing_app/pages/add_edit_delete_paid_membership_fee_page.dart';
 import 'package:organization_managing_app/pages/login_page.dart';
 import 'package:organization_managing_app/pages/members_filter_page.dart';
 import 'package:organization_managing_app/pages/members_page.dart';
+import 'package:organization_managing_app/pages/paid_membership_fee_page.dart';
 import 'package:organization_managing_app/pages/register_page.dart';
 import 'package:organization_managing_app/pages/settings_page.dart';
 import 'package:organization_managing_app/pages/splash_page.dart';
@@ -48,12 +49,14 @@ final GoRouter router = GoRouter(
       },
     ),
     GoRoute(
-      name: RouteNames.addPaidMembershipFee,
-      path: "/addPaidMembershipFee",
+      name: RouteNames.addEditDeletePaidMembershipFee,
+      path: "/addEditDeletePaidMembershipFee",
       builder: (context, state) {
-        final id = state.extra as String;
-        return AddPaidMembershipFeePage(
-          memberId: id,
+        final vars = state.extra as List<dynamic>;
+        return AddEditDeletePaidMembershipFeePage(
+          memberId: vars.elementAtOrNull(0),
+          name: vars.elementAtOrNull(1),
+          paidMembershipFeeModel: vars.elementAtOrNull(2),
         );
       },
     ),
@@ -66,6 +69,11 @@ final GoRouter router = GoRouter(
       name: RouteNames.filterMembers,
       path: "/filterMembers",
       builder: (context, state) => const MembersFilterPage(),
+    ),
+    GoRoute(
+      name: RouteNames.paidMembershipFee,
+      path: "/paidMembershipFee",
+      builder: (context, state) => const PaidMembershipFeePage(),
     ),
   ],
 );

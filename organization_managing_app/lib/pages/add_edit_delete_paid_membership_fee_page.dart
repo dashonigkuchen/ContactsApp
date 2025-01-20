@@ -5,26 +5,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:organization_managing_app/core/routes/route_names.dart';
+import 'package:organization_managing_app/core/theme/app_color.dart';
 import 'package:organization_managing_app/core/widgets/custom_circular_loader.dart';
 import 'package:organization_managing_app/core/widgets/custom_snackbar.dart';
 import 'package:organization_managing_app/core/widgets/custom_text_form_field.dart';
 import 'package:organization_managing_app/data/model/paid_membership_fee_model.dart';
-import 'package:organization_managing_app/features/members/cubit/members_cubit.dart';
 import 'package:organization_managing_app/features/paid_membership_fee/cubit/paid_membership_fee_cubit.dart';
 
-class AddPaidMembershipFeePage extends StatefulWidget {
+class AddEditDeletePaidMembershipFeePage extends StatefulWidget {
   final String memberId;
-  const AddPaidMembershipFeePage({
+  final String name;
+  final PaidMembershipFeeModel? paidMembershipFeeModel;
+  const AddEditDeletePaidMembershipFeePage({
     super.key,
     required this.memberId,
+    required this.name,
+    required this.paidMembershipFeeModel,
   });
 
   @override
-  State<AddPaidMembershipFeePage> createState() =>
-      _AddPaidMembershipFeePageState();
+  State<AddEditDeletePaidMembershipFeePage> createState() =>
+      _AddEditDeletePaidMembershipFeePageState();
 }
 
-class _AddPaidMembershipFeePageState extends State<AddPaidMembershipFeePage> {
+class _AddEditDeletePaidMembershipFeePageState
+    extends State<AddEditDeletePaidMembershipFeePage> {
   final _addPaidMembershipFeeFormKey = GlobalKey<FormState>();
   final CurrencyTextInputFormatter _currencyTextInputFormatter =
       CurrencyTextInputFormatter.currency(
@@ -35,6 +40,10 @@ class _AddPaidMembershipFeePageState extends State<AddPaidMembershipFeePage> {
   final TextEditingController _amountTextController = TextEditingController();
   late DateTime _paymentDate = DateTime.now();
   late int _year = DateTime.now().year;
+
+  bool _isAdd() {
+    return widget.paidMembershipFeeModel == null;
+  }
 
   @override
   void initState() {
@@ -48,7 +57,49 @@ class _AddPaidMembershipFeePageState extends State<AddPaidMembershipFeePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add paid membership fee"),
+        title: _isAdd()
+            ? const Text("Add paid membership fee")
+            : const Text("Edit paid membership fee"),
+        actions: [
+          if (!_isAdd())
+            IconButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text("Are you sure to delete?"),
+                      actionsAlignment: MainAxisAlignment.spaceBetween,
+                      actions: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('Cancel'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            context
+                                .read<PaidMembershipFeeCubit>()
+                                .deleteMembershipFee(
+                                  paidMembershipFeeModel:
+                                      widget.paidMembershipFeeModel!,
+                                );
+                          },
+                          child: const Text('Ok'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              icon: const Icon(
+                Icons.delete,
+                color: AppColor.whiteColor,
+              ),
+            ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -62,8 +113,8 @@ class _AddPaidMembershipFeePageState extends State<AddPaidMembershipFeePage> {
                 context,
                 "Success",
               );
-              context.goNamed(RouteNames.members);
-              context.read<MembersCubit>().getAllMembers();
+              context.goNamed(RouteNames.paidMembershipFee);
+              context.read<PaidMembershipFeeCubit>().getAllPaidMembershipFees();
             } else if (state is PaidMembershipFeeError) {
               CustomCircularLoader.cancel(context);
               CustomSnackbar.showError(
@@ -79,6 +130,17 @@ class _AddPaidMembershipFeePageState extends State<AddPaidMembershipFeePage> {
               key: _addPaidMembershipFeeFormKey,
               child: ListView(
                 children: [
+                  Text(
+                    widget.name,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(
+                    height: 26,
+                  ),
                   CustomTextFormField(
                     controller: _amountTextController,
                     validator: (val) {
@@ -140,8 +202,7 @@ class _AddPaidMembershipFeePageState extends State<AddPaidMembershipFeePage> {
                                   child: YearPicker(
                                     firstDate:
                                         DateTime(DateTime.now().year - 3),
-                                    lastDate:
-                                        DateTime(DateTime.now().year + 3),
+                                    lastDate: DateTime(DateTime.now().year + 3),
                                     selectedDate: DateTime(_year),
                                     onChanged: (DateTime dateTime) {
                                       setState(() {

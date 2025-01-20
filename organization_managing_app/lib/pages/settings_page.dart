@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:organization_managing_app/core/theme/app_color.dart';
 import 'package:organization_managing_app/core/theme/theme_provider.dart';
 import 'package:organization_managing_app/features/settings/settings_options.dart';
+import 'package:organization_managing_app/pages/common/app_navigation_drawer.dart';
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -19,6 +21,8 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: AppBar(
         title: const Text("Settings"),
       ),
+      drawer: AppNavigationDrawer(),
+      drawerScrimColor: AppColor.transparentColor,
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(

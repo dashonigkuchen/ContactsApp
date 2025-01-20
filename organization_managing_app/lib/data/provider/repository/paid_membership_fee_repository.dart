@@ -46,13 +46,16 @@ class PaidMembershipFeeRepository {
   }
 
   Future<Either<Failure, List<PaidMembershipFeeModel>>>
-      getAllPaidMembershipFees() async {
+      getAllPaidMembershipFees({
+    List<String>? queries,
+  }) async {
     try {
       if (await _internetConnectionService.hasInternetAccess()) {
         DocumentList documents =
             await _appwriteProvider.database!.listDocuments(
           databaseId: AppwriteConstants.databaseId,
           collectionId: AppwriteConstants.paidMembershipFeeCollectionId,
+          queries: queries,
         );
         Map<String, dynamic> data = documents.toMap();
         List d = data['documents'].toList();
@@ -99,6 +102,68 @@ class PaidMembershipFeeRepository {
           }
           return right(response);
         }
+      } else {
+        return left(Failure(
+          message: "", // Message will be translated
+          type: FailureType.internet,
+        ));
+      }
+    } on AppwriteException catch (e) {
+      return left(Failure(
+        message: e.message!,
+        type: FailureType.appwrite,
+      ));
+    } on ServerException catch (e) {
+      return left(Failure(
+        message: e.message,
+        type: FailureType.internal,
+      ));
+    }
+  }
+
+  Future<Either<Failure, Document>> editPaidMembershipFee({
+    required PaidMembershipFeeModel paidMembershipFeeModel,
+  }) async {
+    try {
+      if (await _internetConnectionService.hasInternetAccess()) {
+        Document document = await _appwriteProvider.database!.updateDocument(
+          databaseId: AppwriteConstants.databaseId,
+          collectionId: AppwriteConstants.paidMembershipFeeCollectionId,
+          documentId: paidMembershipFeeModel.id,
+          data: paidMembershipFeeModel.toMap(),
+        );
+        return right(document);
+      } else {
+        return left(Failure(
+          message: "", // Message will be translated
+          type: FailureType.internet,
+        ));
+      }
+    } on AppwriteException catch (e) {
+      return left(Failure(
+        message: e.message!,
+        type: FailureType.appwrite,
+      ));
+    } on ServerException catch (e) {
+      return left(Failure(
+        message: e.message,
+        type: FailureType.internal,
+      ));
+    }
+  }
+
+  Future<Either<Failure, dynamic>> deleteMembershipFee({
+    required String documentId,
+  }) async {
+    try {
+      if (await _internetConnectionService.hasInternetAccess()) {
+        var response = await _appwriteProvider.database!.deleteDocument(
+          databaseId: AppwriteConstants.databaseId,
+          collectionId: AppwriteConstants.paidMembershipFeeCollectionId,
+          documentId: documentId,
+        );
+
+        return right(response);
       } else {
         return left(Failure(
           message: "", // Message will be translated

@@ -14,6 +14,7 @@ class CustomTextFormField extends StatelessWidget {
     this.onFieldSubmitted,
     this.textInputAction,
     this.formatter,
+    this.readOnly,
   });
 
   final TextEditingController controller;
@@ -25,6 +26,7 @@ class CustomTextFormField extends StatelessWidget {
   final Function(String)? onFieldSubmitted;
   final TextInputAction? textInputAction;
   final TextInputFormatter? formatter;
+  final bool? readOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +72,7 @@ class CustomTextFormField extends StatelessWidget {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       inputFormatters: formatter != null ? [formatter!] : null,
+      readOnly: readOnly ?? false,
     );
   }
 }

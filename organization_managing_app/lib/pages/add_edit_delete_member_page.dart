@@ -350,11 +350,17 @@ class _AddEditDeleteMemberPageState extends State<AddEditDeleteMemberPage> {
                         ),
                       ],
                     ),
-                  if (!_isAdd() && !_isHonoraryMember && _noMembershipFeeNeededReason.isEmpty)
+                  if (!_isAdd() &&
+                      !_isHonoraryMember &&
+                      _noMembershipFeeNeededReason.isEmpty)
                     ElevatedButton.icon(
                       onPressed: () => context.pushNamed(
-                        RouteNames.addPaidMembershipFee,
-                        extra: _id,
+                        RouteNames.addEditDeletePaidMembershipFee,
+                        extra: [
+                          _id,
+                          "${_firstNameTextController.text} ${_lastNameTextController.text}",
+                          null
+                        ],
                       ),
                       icon: const Icon(Icons.add),
                       label: const Text("Add paid membership fee"),
