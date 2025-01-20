@@ -34,6 +34,13 @@ class _MembersPageState extends State<MembersPage> {
           ));
     }
 
+    if (member.noMembershipFeeNeededReason != null && member.noMembershipFeeNeededReason!.isNotEmpty) {
+      return Text(member.noMembershipFeeNeededReason!,
+          style: TextStyle(
+            color: AppColor.snackBarGreen,
+          ));
+    }
+
     paidMembershipFeeList.sort((a, b) => b.year.compareTo(a.year));
     final PaidMembershipFeeModel paidMembershipFee =
         paidMembershipFeeList.firstWhere(

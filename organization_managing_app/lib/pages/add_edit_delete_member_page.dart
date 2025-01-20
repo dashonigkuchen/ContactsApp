@@ -28,9 +28,11 @@ class _AddEditDeleteMemberPageState extends State<AddEditDeleteMemberPage> {
   late String _id;
   late TextEditingController _firstNameTextController,
       _lastNameTextController,
-      _emailTextController;
+      _emailTextController,
+      _noMembershipFeeNeededReasonController;
   late DateTime? _birthDate, _entryDate;
   late bool _isHonoraryMember;
+  late String _noMembershipFeeNeededReason;
 
   @override
   void initState() {
@@ -49,6 +51,11 @@ class _AddEditDeleteMemberPageState extends State<AddEditDeleteMemberPage> {
     _birthDate = widget.memberModel?.birthDate;
     _entryDate = widget.memberModel?.entryDate;
     _isHonoraryMember = widget.memberModel?.isHonoraryMember ?? false;
+    _noMembershipFeeNeededReasonController = TextEditingController(
+      text: widget.memberModel?.noMembershipFeeNeededReason ?? "",
+    );
+    _noMembershipFeeNeededReason =
+        widget.memberModel?.noMembershipFeeNeededReason ?? "";
   }
 
   @override
@@ -56,6 +63,7 @@ class _AddEditDeleteMemberPageState extends State<AddEditDeleteMemberPage> {
     _firstNameTextController.dispose();
     _lastNameTextController.dispose();
     _emailTextController.dispose();
+    _noMembershipFeeNeededReasonController.dispose();
 
     super.dispose();
   }
@@ -69,6 +77,8 @@ class _AddEditDeleteMemberPageState extends State<AddEditDeleteMemberPage> {
     _firstNameTextController.clear();
     _lastNameTextController.clear();
     _emailTextController.clear();
+    _noMembershipFeeNeededReasonController.clear();
+    _noMembershipFeeNeededReason = "";
   }
 
   void _submit() {
@@ -82,6 +92,9 @@ class _AddEditDeleteMemberPageState extends State<AddEditDeleteMemberPage> {
         birthDate: _birthDate,
         entryDate: _entryDate,
         isHonoraryMember: _isHonoraryMember,
+        noMembershipFeeNeededReason: _noMembershipFeeNeededReason == ""
+            ? null
+            : _noMembershipFeeNeededReason,
       );
 
       if (_isAdd()) {
@@ -257,7 +270,87 @@ class _AddEditDeleteMemberPageState extends State<AddEditDeleteMemberPage> {
                       ),
                     ],
                   ),
-                  if (!_isAdd() && !_isHonoraryMember)
+                  if (!_isHonoraryMember)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text("Custom reason to exclude membership fee"),
+                        ElevatedButton(
+                          onPressed: () async {
+                            showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return StatefulBuilder(
+                                    builder: (context, setState) {
+                                  return AlertDialog(
+                                    title: const Text(
+                                        "Custom reason to exclude member from membership fee"),
+                                    content: TextField(
+                                      controller:
+                                          _noMembershipFeeNeededReasonController,
+                                      autofocus: true,
+                                      onChanged: (value) => setState(
+                                        () {},
+                                      ),
+                                      decoration: InputDecoration(
+                                          suffix:
+                                              _noMembershipFeeNeededReasonController
+                                                          .text ==
+                                                      ""
+                                                  ? null
+                                                  : InkWell(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          _noMembershipFeeNeededReasonController
+                                                              .text = "";
+                                                        });
+                                                      },
+                                                      child: Icon(
+                                                        Icons.clear,
+                                                        color:
+                                                            AppColor.greyColor,
+                                                      ),
+                                                    )),
+                                    ),
+                                    actions: [
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('Cancel'),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop(
+                                              _noMembershipFeeNeededReasonController
+                                                  .text);
+                                        },
+                                        child: const Text('Ok'),
+                                      ),
+                                    ],
+                                  );
+                                });
+                              },
+                            ).then(
+                              (reason) {
+                                setState(() {
+                                  if (reason != null) {
+                                    _noMembershipFeeNeededReason = reason;
+                                  } else {
+                                    _noMembershipFeeNeededReasonController
+                                        .text = _noMembershipFeeNeededReason;
+                                  }
+                                });
+                              },
+                            );
+                          },
+                          child: Icon(_noMembershipFeeNeededReason == ""
+                              ? Icons.add
+                              : Icons.change_circle),
+                        ),
+                      ],
+                    ),
+                  if (!_isAdd() && !_isHonoraryMember && _noMembershipFeeNeededReason.isEmpty)
                     ElevatedButton.icon(
                       onPressed: () => context.pushNamed(
                         RouteNames.addPaidMembershipFee,

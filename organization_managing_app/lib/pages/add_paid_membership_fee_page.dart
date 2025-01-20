@@ -156,7 +156,6 @@ class _AddPaidMembershipFeePageState extends State<AddPaidMembershipFeePage> {
                             },
                           );
                         },
-                        icon: const Icon(Icons.save),
                         label: Text(_year.toString()),
                       ),
                     ],
