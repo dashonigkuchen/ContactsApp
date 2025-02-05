@@ -74,7 +74,7 @@ class _PaidMembershipFeePageState extends State<PaidMembershipFeePage> {
                           onTap: () => context.pushNamed(
                             RouteNames.addEditDeletePaidMembershipFee,
                             extra: [
-                              paidMembershipFee.id,
+                              paidMembershipFee.memberId,
                               "${member.firstName} ${member.lastName}",
                               paidMembershipFee,
                             ],

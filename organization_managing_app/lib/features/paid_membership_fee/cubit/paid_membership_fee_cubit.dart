@@ -54,7 +54,7 @@ class PaidMembershipFeeCubit extends Cubit<PaidMembershipFeeState> {
     }
   }
 
-  void editMembershipFee({
+  void editPaidMembershipFee({
     required PaidMembershipFeeModel paidMembershipFeeModel,
   }) async {
     emit(PaidMembershipFeeLoading());
@@ -67,7 +67,7 @@ class PaidMembershipFeeCubit extends Cubit<PaidMembershipFeeState> {
         (document) => emit(PaidMembershipFeeSuccess()));
   }
 
-  void deleteMembershipFee({
+  void deletePaidMembershipFee({
     required PaidMembershipFeeModel paidMembershipFeeModel,
   }) async {
     emit(PaidMembershipFeeLoading());

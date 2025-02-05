@@ -3,8 +3,6 @@ import 'package:currency_text_input_formatter/currency_text_input_formatter.dart
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:organization_managing_app/core/routes/route_names.dart';
 import 'package:organization_managing_app/core/theme/app_color.dart';
 import 'package:organization_managing_app/core/widgets/custom_circular_loader.dart';
 import 'package:organization_managing_app/core/widgets/custom_snackbar.dart';
@@ -82,7 +80,7 @@ class _AddEditDeletePaidMembershipFeePageState
                             Navigator.of(context).pop();
                             context
                                 .read<PaidMembershipFeeCubit>()
-                                .deleteMembershipFee(
+                                .deletePaidMembershipFee(
                                   paidMembershipFeeModel:
                                       widget.paidMembershipFeeModel!,
                                 );
@@ -113,8 +111,7 @@ class _AddEditDeletePaidMembershipFeePageState
                 context,
                 "Success",
               );
-              context.goNamed(RouteNames.paidMembershipFee);
-              context.read<PaidMembershipFeeCubit>().getAllPaidMembershipFees();
+              Navigator.pop(context);
             } else if (state is PaidMembershipFeeError) {
               CustomCircularLoader.cancel(context);
               CustomSnackbar.showError(
@@ -227,17 +224,27 @@ class _AddEditDeletePaidMembershipFeePageState
                   ElevatedButton.icon(
                     onPressed: () {
                       final paidMembershipFeeModel = PaidMembershipFeeModel(
-                        id: ID.unique(),
+                        id: _isAdd()
+                            ? ID.unique()
+                            : widget.paidMembershipFeeModel!.id,
                         amount: _currencyTextInputFormatter.getDouble(),
                         year: _year,
                         paymentDate: _paymentDate,
                         memberId: widget.memberId,
                       );
-                      context
-                          .read<PaidMembershipFeeCubit>()
-                          .addPaidMembershipFee(
-                            paidMembershipFeeModel: paidMembershipFeeModel,
-                          );
+                      if (_isAdd()) {
+                        context
+                            .read<PaidMembershipFeeCubit>()
+                            .addPaidMembershipFee(
+                              paidMembershipFeeModel: paidMembershipFeeModel,
+                            );
+                      } else {
+                        context
+                            .read<PaidMembershipFeeCubit>()
+                            .editPaidMembershipFee(
+                              paidMembershipFeeModel: paidMembershipFeeModel,
+                            );
+                      }
                     },
                     icon: const Icon(Icons.save),
                     label: const Text("Submit"),
