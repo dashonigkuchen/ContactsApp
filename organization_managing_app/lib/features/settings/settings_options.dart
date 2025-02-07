@@ -46,11 +46,11 @@ class SettingsOptions {
     return [
       const DropdownMenuItem<Locale>(
         value: Locale("en"),
-        child: const Text("English"),
+        child: Text("English"),
       ),
       const DropdownMenuItem<Locale>(
         value: Locale("de"),
-        child: const Text("Deutsch"),
+        child: Text("Deutsch"),
       ),
     ];
   }

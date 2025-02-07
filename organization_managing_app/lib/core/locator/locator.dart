@@ -10,7 +10,7 @@ import 'package:organization_managing_app/features/members/members_filter_contai
 
 final locator = GetIt.I;
 
-void setupLocator() {
+void setupLocator() async {
   locator.registerLazySingleton<InternetConnectionService>(
     () => InternetConnectionService(),
   );
@@ -36,10 +36,9 @@ void setupLocator() {
   );
 
   locator.registerLazySingleton<MembersFilterContainer>(
-    () => MembersFilterContainer(
-      secureStorageService: locator.get<SecureStorageService>(),
-    ),
+    () => MembersFilterContainer(),
   );
+  await locator<MembersFilterContainer>().init();
 
   locator.registerLazySingleton<CommonDataLoader>(
     () => CommonDataLoader(),

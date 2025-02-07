@@ -1,4 +1,3 @@
-import 'package:appwrite/appwrite.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:organization_managing_app/core/locator/locator.dart';
@@ -15,39 +14,9 @@ class MembersFilterPage extends StatefulWidget {
 class _MembersFilterPageState extends State<MembersFilterPage> {
   final MembersFilterContainer _membersFilterContainer =
       locator<MembersFilterContainer>();
-  bool loading = true;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _membersFilterContainer.init().then((_) => setState(() {
-          loading = false;
-        }));
-  }
-
-  List<String>? _generateQueries() {
-    List<String> queries = <String>[];
-    if (_membersFilterContainer.isHonoraryMember == true) {
-      queries.add(Query.equal("isHonoraryMember", _membersFilterContainer.isHonoraryMember));
-    }
-
-    if (queries.isNotEmpty) {
-      return queries;
-    }
-
-    return null;
-  }
 
   @override
   Widget build(BuildContext context) {
-    if (loading) {
-      return const PopScope(
-        canPop: false,
-        child: Scaffold(body: Center(child: CircularProgressIndicator())),
-      );
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Filter Options"),
@@ -60,11 +29,71 @@ class _MembersFilterPageState extends State<MembersFilterPage> {
             children: [
               const Text("Only honorary member"),
               Checkbox(
-                value: _membersFilterContainer.isHonoraryMember,
+                value: _membersFilterContainer.onlyHonoraryMember,
                 onChanged: (val) {
                   if (val != null) {
                     setState(() {});
-                    _membersFilterContainer.setIsHonoraryMember(val);
+                    _membersFilterContainer.onlyHonoraryMember = val;
+                  }
+                },
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text("Only not paid member"),
+              Checkbox(
+                value: _membersFilterContainer.onlyNotPaidMembers,
+                onChanged: (val) {
+                  if (val != null) {
+                    setState(() {});
+                    _membersFilterContainer.onlyNotPaidMembers = val;
+                  }
+                },
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text("Only paid members"),
+              Checkbox(
+                value: _membersFilterContainer.onlyPaidMembers,
+                onChanged: (val) {
+                  if (val != null) {
+                    setState(() {});
+                    _membersFilterContainer.onlyPaidMembers = val;
+                  }
+                },
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text("Only no payment needed members"),
+              Checkbox(
+                value: _membersFilterContainer.onlyNoPaymentNeededMembers,
+                onChanged: (val) {
+                  if (val != null) {
+                    setState(() {});
+                    _membersFilterContainer.onlyNoPaymentNeededMembers = val;
+                  }
+                },
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text("Only board members"),
+              Checkbox(
+                value: _membersFilterContainer.onlyBoardMembers,
+                onChanged: (val) {
+                  if (val != null) {
+                    setState(() {});
+                    _membersFilterContainer.onlyBoardMembers = val;
                   }
                 },
               ),
@@ -74,7 +103,7 @@ class _MembersFilterPageState extends State<MembersFilterPage> {
             onPressed: () {
               _membersFilterContainer.storeCurrentFilter();
               Navigator.of(context).pop();
-              context.read<MembersCubit>().getAllMembersAndPaidMembershipFees(queries: _generateQueries());
+              context.read<MembersCubit>().getAllMembersAndPaidMembershipFees();
             },
             child: const Text("Apply Filter"),
           ),
