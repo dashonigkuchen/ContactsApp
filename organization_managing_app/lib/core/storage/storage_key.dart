@@ -6,4 +6,6 @@ class StorageKey {
   static String get filterOnlyPaidMembers => "filterOnlyPaidMembers";
   static String get filterOnlyNoPaymentNeededMembers => "filterOnlyNoPaymentNeededMembers";
   static String get filterOnlyBoardMembers => "filterOnlyBoardMembers";
+  static String get filterAlsoShowDeactivatedMembers => "filterAlsoShowDeactivatedMembers";
+  static String get filterOnlyDeactivatedMembers => "filterOnlyDeactivatedMembers";
 }

@@ -42,7 +42,7 @@ class _MembersFilterPageState extends State<MembersFilterPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text("Only not paid member"),
+              const Text("Only not paid member [NOT WORKING NOW]"),
               Checkbox(
                 value: _membersFilterContainer.onlyNotPaidMembers,
                 onChanged: (val) {
@@ -57,7 +57,7 @@ class _MembersFilterPageState extends State<MembersFilterPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text("Only paid members"),
+              const Text("Only paid members [NOT WORKING NOW]"),
               Checkbox(
                 value: _membersFilterContainer.onlyPaidMembers,
                 onChanged: (val) {
@@ -94,6 +94,36 @@ class _MembersFilterPageState extends State<MembersFilterPage> {
                   if (val != null) {
                     setState(() {});
                     _membersFilterContainer.onlyBoardMembers = val;
+                  }
+                },
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text("Also show deactivated members"),
+              Checkbox(
+                value: _membersFilterContainer.alsoShowDeactivatedMembers,
+                onChanged: (val) {
+                  if (val != null) {
+                    setState(() {});
+                    _membersFilterContainer.alsoShowDeactivatedMembers = val;
+                  }
+                },
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text("Only deactivated members"),
+              Checkbox(
+                value: _membersFilterContainer.onlyDeactivatedMembers,
+                onChanged: (val) {
+                  if (val != null) {
+                    setState(() {});
+                    _membersFilterContainer.onlyDeactivatedMembers = val;
                   }
                 },
               ),

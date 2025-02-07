@@ -16,6 +16,7 @@ class MemberModel {
   final String? phoneNumber;
   final String? gender;
   final String? boardFunction;
+  final bool active;
   MemberModel({
     required this.id,
     required this.firstName,
@@ -31,6 +32,7 @@ class MemberModel {
     this.phoneNumber,
     this.gender,
     this.boardFunction,
+    required this.active,
   });
 
   MemberModel copyWith({
@@ -48,6 +50,7 @@ class MemberModel {
     String? phoneNumber,
     String? gender,
     String? boardFunction,
+    bool? active,
   }) {
     return MemberModel(
       id: id ?? this.id,
@@ -57,15 +60,14 @@ class MemberModel {
       birthDate: birthDate ?? this.birthDate,
       entryDate: entryDate ?? this.entryDate,
       isHonoraryMember: isHonoraryMember ?? this.isHonoraryMember,
-      noMembershipFeeNeededReason:
-          noMembershipFeeNeededReason ?? this.noMembershipFeeNeededReason,
-      streetWithHouseNumber:
-          streetWithHouseNumber ?? this.streetWithHouseNumber,
+      noMembershipFeeNeededReason: noMembershipFeeNeededReason ?? this.noMembershipFeeNeededReason,
+      streetWithHouseNumber: streetWithHouseNumber ?? this.streetWithHouseNumber,
       city: city ?? this.city,
       postalCode: postalCode ?? this.postalCode,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       gender: gender ?? this.gender,
       boardFunction: boardFunction ?? this.boardFunction,
+      active: active ?? this.active,
     );
   }
 
@@ -85,6 +87,7 @@ class MemberModel {
       'phoneNumber': phoneNumber,
       'gender': gender,
       'boardFunction': boardFunction,
+      'active': active,
     };
   }
 
@@ -94,26 +97,17 @@ class MemberModel {
       firstName: map['firstName'] as String,
       lastName: map['lastName'] as String,
       email: map['email'] != null ? map['email'] as String : null,
-      birthDate: map['birthDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['birthDate'] as int)
-          : null,
-      entryDate: map['entryDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['entryDate'] as int)
-          : null,
+      birthDate: map['birthDate'] != null ? DateTime.fromMillisecondsSinceEpoch(map['birthDate'] as int) : null,
+      entryDate: map['entryDate'] != null ? DateTime.fromMillisecondsSinceEpoch(map['entryDate'] as int) : null,
       isHonoraryMember: map['isHonoraryMember'] as bool,
-      noMembershipFeeNeededReason: map['noMembershipFeeNeededReason'] != null
-          ? map['noMembershipFeeNeededReason'] as String
-          : null,
-      streetWithHouseNumber: map['streetWithHouseNumber'] != null
-          ? map['streetWithHouseNumber'] as String
-          : null,
+      noMembershipFeeNeededReason: map['noMembershipFeeNeededReason'] != null ? map['noMembershipFeeNeededReason'] as String : null,
+      streetWithHouseNumber: map['streetWithHouseNumber'] != null ? map['streetWithHouseNumber'] as String : null,
       city: map['city'] != null ? map['city'] as String : null,
       postalCode: map['postalCode'] != null ? map['postalCode'] as int : null,
-      phoneNumber:
-          map['phoneNumber'] != null ? map['phoneNumber'] as String : null,
+      phoneNumber: map['phoneNumber'] != null ? map['phoneNumber'] as String : null,
       gender: map['gender'] != null ? map['gender'] as String : null,
-      boardFunction:
-          map['boardFunction'] != null ? map['boardFunction'] as String : null,
+      boardFunction: map['boardFunction'] != null ? map['boardFunction'] as String : null,
+      active: map['active'] as bool,
     );
   }
 
@@ -124,45 +118,48 @@ class MemberModel {
 
   @override
   String toString() {
-    return 'MemberModel(id: $id, firstName: $firstName, lastName: $lastName, email: $email, birthDate: $birthDate, entryDate: $entryDate, isHonoraryMember: $isHonoraryMember, noMembershipFeeNeededReason: $noMembershipFeeNeededReason, streetWithHouseNumber: $streetWithHouseNumber, city: $city, postalCode: $postalCode, phoneNumber: $phoneNumber, gender: $gender, boardFunction: $boardFunction)';
+    return 'MemberModel(id: $id, firstName: $firstName, lastName: $lastName, email: $email, birthDate: $birthDate, entryDate: $entryDate, isHonoraryMember: $isHonoraryMember, noMembershipFeeNeededReason: $noMembershipFeeNeededReason, streetWithHouseNumber: $streetWithHouseNumber, city: $city, postalCode: $postalCode, phoneNumber: $phoneNumber, gender: $gender, boardFunction: $boardFunction, active: $active)';
   }
 
   @override
   bool operator ==(covariant MemberModel other) {
     if (identical(this, other)) return true;
-
-    return other.id == id &&
-        other.firstName == firstName &&
-        other.lastName == lastName &&
-        other.email == email &&
-        other.birthDate == birthDate &&
-        other.entryDate == entryDate &&
-        other.isHonoraryMember == isHonoraryMember &&
-        other.noMembershipFeeNeededReason == noMembershipFeeNeededReason &&
-        other.streetWithHouseNumber == streetWithHouseNumber &&
-        other.city == city &&
-        other.postalCode == postalCode &&
-        other.phoneNumber == phoneNumber &&
-        other.gender == gender &&
-        other.boardFunction == boardFunction;
+  
+    return 
+      other.id == id &&
+      other.firstName == firstName &&
+      other.lastName == lastName &&
+      other.email == email &&
+      other.birthDate == birthDate &&
+      other.entryDate == entryDate &&
+      other.isHonoraryMember == isHonoraryMember &&
+      other.noMembershipFeeNeededReason == noMembershipFeeNeededReason &&
+      other.streetWithHouseNumber == streetWithHouseNumber &&
+      other.city == city &&
+      other.postalCode == postalCode &&
+      other.phoneNumber == phoneNumber &&
+      other.gender == gender &&
+      other.boardFunction == boardFunction &&
+      other.active == active;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-        firstName.hashCode ^
-        lastName.hashCode ^
-        email.hashCode ^
-        birthDate.hashCode ^
-        entryDate.hashCode ^
-        isHonoraryMember.hashCode ^
-        noMembershipFeeNeededReason.hashCode ^
-        streetWithHouseNumber.hashCode ^
-        city.hashCode ^
-        postalCode.hashCode ^
-        phoneNumber.hashCode ^
-        gender.hashCode ^
-        boardFunction.hashCode;
+      firstName.hashCode ^
+      lastName.hashCode ^
+      email.hashCode ^
+      birthDate.hashCode ^
+      entryDate.hashCode ^
+      isHonoraryMember.hashCode ^
+      noMembershipFeeNeededReason.hashCode ^
+      streetWithHouseNumber.hashCode ^
+      city.hashCode ^
+      postalCode.hashCode ^
+      phoneNumber.hashCode ^
+      gender.hashCode ^
+      boardFunction.hashCode ^
+      active.hashCode;
   }
 }
 

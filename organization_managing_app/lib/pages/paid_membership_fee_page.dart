@@ -72,6 +72,7 @@ class _PaidMembershipFeePageState extends State<PaidMembershipFeePage> {
                               firstName: "-1",
                               lastName: "-1",
                               isHonoraryMember: false,
+                              active: false,
                             ),
                             paidMembershipFeeList: null,
                           ),

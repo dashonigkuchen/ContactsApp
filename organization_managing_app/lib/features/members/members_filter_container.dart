@@ -12,6 +12,8 @@ class MembersFilterContainer {
   late bool onlyPaidMembers = false;
   late bool onlyNoPaymentNeededMembers = false;
   late bool onlyBoardMembers = false;
+  late bool alsoShowDeactivatedMembers = false;
+  late bool onlyDeactivatedMembers = false;
 
   Future<void> init() async {
     onlyHonoraryMember = bool.parse((await _secureStorageService
@@ -29,27 +31,39 @@ class MembersFilterContainer {
     onlyBoardMembers = bool.parse((await _secureStorageService
             .getValue(StorageKey.filterOnlyBoardMembers)) ??
         "false");
+    alsoShowDeactivatedMembers = bool.parse((await _secureStorageService
+            .getValue(StorageKey.filterAlsoShowDeactivatedMembers)) ??
+        "false");
+    onlyDeactivatedMembers = bool.parse((await _secureStorageService
+            .getValue(StorageKey.filterOnlyDeactivatedMembers)) ??
+        "false");
   }
 
   List<String>? generateQueries() {
     List<String> queries = <String>[];
-    if (onlyHonoraryMember == true) {
+    if (onlyHonoraryMember) {
       queries.add(Query.equal("isHonoraryMember", onlyHonoraryMember));
     }
-    if (onlyNotPaidMembers == true) {
+    if (onlyNotPaidMembers) {
       // usage of appwrite relationship + query would be nice, but not possible as of now
     }
-    if (onlyPaidMembers == true) {
+    if (onlyPaidMembers) {
       // usage of appwrite relationship + query would be nice, but not possible as of now
     }
-    if (onlyNoPaymentNeededMembers == true) {
+    if (onlyNoPaymentNeededMembers) {
       queries.add(Query.or([
         Query.equal("isHonoraryMember", true),
         Query.isNotNull("noMembershipFeeNeededReason"),
       ]));
     }
-    if (onlyBoardMembers == true) {
+    if (onlyBoardMembers) {
       queries.add(Query.isNotNull("boardFunction"));
+    }
+    if (!alsoShowDeactivatedMembers && !onlyDeactivatedMembers) {
+      queries.add(Query.equal("active", true));
+    }
+    if (onlyDeactivatedMembers) {
+      queries.add(Query.equal("active", false));
     }
 
     if (queries.isNotEmpty) {
@@ -70,5 +84,9 @@ class MembersFilterContainer {
         onlyNoPaymentNeededMembers.toString());
     _secureStorageService.setValue(
         StorageKey.filterOnlyBoardMembers, onlyBoardMembers.toString());
+    _secureStorageService.setValue(
+        StorageKey.filterAlsoShowDeactivatedMembers, alsoShowDeactivatedMembers.toString());
+    _secureStorageService.setValue(
+        StorageKey.filterOnlyDeactivatedMembers, onlyDeactivatedMembers.toString());
   }
 }

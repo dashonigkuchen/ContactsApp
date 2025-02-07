@@ -23,7 +23,8 @@ class AddEditDeleteMemberPage extends StatefulWidget {
   });
 
   @override
-  State<AddEditDeleteMemberPage> createState() => _AddEditDeleteMemberPageState();
+  State<AddEditDeleteMemberPage> createState() =>
+      _AddEditDeleteMemberPageState();
 }
 
 class _AddEditDeleteMemberPageState extends State<AddEditDeleteMemberPage> {
@@ -32,10 +33,12 @@ class _AddEditDeleteMemberPageState extends State<AddEditDeleteMemberPage> {
       widget.originalMemberWithLatestPaidMembershipFee ??
           MemberWithPaidMembershipFees(
             memberModel: MemberModel(
-                id: ID.unique(),
-                firstName: "",
-                lastName: "",
-                isHonoraryMember: false),
+              id: ID.unique(),
+              firstName: "",
+              lastName: "",
+              isHonoraryMember: false,
+              active: true,
+            ),
             paidMembershipFeeList: null,
           );
   late bool _isAdd = false, _isEdit = false;
@@ -50,7 +53,7 @@ class _AddEditDeleteMemberPageState extends State<AddEditDeleteMemberPage> {
       _boardFunctionTextEditingController,
       _noMembershipFeeNeededReasonTextEditingController;
   late DateTime? _birthDate, _entryDate;
-  late bool _isHonoraryMember;
+  late bool _isHonoraryMember, _membershipState;
   late String? _gender;
 
   @override
@@ -97,6 +100,7 @@ class _AddEditDeleteMemberPageState extends State<AddEditDeleteMemberPage> {
 
     _isHonoraryMember =
         _memberWithLatestPaidMembershipFee.memberModel.isHonoraryMember;
+    _membershipState = _memberWithLatestPaidMembershipFee.memberModel.active;
 
     _gender = _memberWithLatestPaidMembershipFee.memberModel.gender;
   }
@@ -161,6 +165,7 @@ class _AddEditDeleteMemberPageState extends State<AddEditDeleteMemberPage> {
       boardFunction: _boardFunctionTextEditingController.text == ""
           ? null
           : _boardFunctionTextEditingController.text,
+      active: _membershipState,
     );
   }
 
@@ -492,6 +497,21 @@ class _AddEditDeleteMemberPageState extends State<AddEditDeleteMemberPage> {
                         const SizedBox(
                           height: 10,
                         ),
+                      DropdownMenu<bool>(
+                        dropdownMenuEntries: [
+                          const DropdownMenuEntry(value: true, label: "Active"),
+                          const DropdownMenuEntry(value: false, label: "Not active"),
+                        ],
+                        label: Text("Membership state"),
+                        width: double.maxFinite,
+                        initialSelection: _membershipState,
+                        enabled: _isAdd || _isEdit ? true : false,
+                        onSelected: (value) =>
+                            setState(() => _membershipState = value!),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
                     ],
                   ),
                   const SizedBox(
@@ -539,7 +559,8 @@ class _AddEditDeleteMemberPageState extends State<AddEditDeleteMemberPage> {
                                 }
                               }
                             },
-                            title: Text("MB ${paidMembershipFee.year}, ${paidMembershipFee.id}"),
+                            title: Text(
+                                "MB ${paidMembershipFee.year}, ${paidMembershipFee.id}"),
                             subtitle: Text(
                                 "Paid on ${DateFormat.yMMMMd('de_DE').format(paidMembershipFee.paymentDate)}"),
                             trailing:
