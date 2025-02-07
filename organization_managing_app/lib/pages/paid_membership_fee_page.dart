@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:organization_managing_app/core/routes/route_names.dart';
-import 'package:organization_managing_app/core/theme/app_color.dart';
 import 'package:organization_managing_app/data/model/member_model.dart';
 import 'package:organization_managing_app/core/widgets/custom_circular_loader.dart';
+import 'package:organization_managing_app/data/model/member_with_paid_membership_fees.dart';
 import 'package:organization_managing_app/features/paid_membership_fee/cubit/paid_membership_fee_cubit.dart';
 import 'package:organization_managing_app/pages/common/app_navigation_drawer.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -20,8 +20,9 @@ class PaidMembershipFeePage extends StatefulWidget {
 class _PaidMembershipFeePageState extends State<PaidMembershipFeePage> {
   @override
   void initState() {
-    initializeDateFormatting('de_DE', null).then((_) =>
-        context.read<PaidMembershipFeeCubit>().getAllPaidMembershipFees());
+    initializeDateFormatting('de_DE', null).then((_) => context
+        .read<PaidMembershipFeeCubit>()
+        .getAllMembersAndPaidMembershipFees());
     super.initState();
   }
 
@@ -42,7 +43,6 @@ class _PaidMembershipFeePageState extends State<PaidMembershipFeePage> {
         ],
       ),
       drawer: const AppNavigationDrawer(),
-      drawerScrimColor: AppColor.transparentColor,
       body: BlocBuilder<PaidMembershipFeeCubit, PaidMembershipFeeState>(
         builder: (context, state) {
           if (state is PaidMembershipFeeLoading) {
@@ -53,7 +53,7 @@ class _PaidMembershipFeePageState extends State<PaidMembershipFeePage> {
               onRefresh: () async {
                 context
                     .read<PaidMembershipFeeCubit>()
-                    .getAllPaidMembershipFees();
+                    .getAllMembersAndPaidMembershipFees();
               },
               child: state.paidMembershipFeeList.isNotEmpty
                   ? ListView.builder(
@@ -61,15 +61,22 @@ class _PaidMembershipFeePageState extends State<PaidMembershipFeePage> {
                       itemBuilder: (context, index) {
                         final paidMembershipFee =
                             state.paidMembershipFeeList[index];
-                        final member = state.membersList.firstWhere(
-                          (element) => element.id == paidMembershipFee.memberId,
-                          orElse: () => MemberModel(
-                            id: "-1",
-                            firstName: "-1",
-                            lastName: "-1",
-                            isHonoraryMember: false,
+                        final memberWithPaidMembershipFee =
+                            state.memberWithPaidMembershipFeesList.firstWhere(
+                          (element) =>
+                              element.memberModel.id ==
+                              paidMembershipFee.memberId,
+                          orElse: () => MemberWithPaidMembershipFees(
+                            memberModel: MemberModel(
+                              id: "-1",
+                              firstName: "-1",
+                              lastName: "-1",
+                              isHonoraryMember: false,
+                            ),
+                            paidMembershipFeeList: null,
                           ),
                         );
+                        final member = memberWithPaidMembershipFee.memberModel;
                         return ListTile(
                           onTap: () => context.pushNamed(
                             RouteNames.addEditDeletePaidMembershipFee,

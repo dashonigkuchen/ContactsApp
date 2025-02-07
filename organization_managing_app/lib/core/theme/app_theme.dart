@@ -8,6 +8,8 @@ class AppTheme {
     appBarTheme: const AppBarTheme(backgroundColor: AppColor.darkAppBarColor),
     progressIndicatorTheme:
         const ProgressIndicatorThemeData(color: AppColor.appColor),
+    drawerTheme: DrawerThemeData(scrimColor: AppColor.transparentColor),
+    dialogTheme: DialogTheme(barrierColor: AppColor.halfTransparentColor),
   );
 
   static final lightTheme = ThemeData.light(useMaterial3: true).copyWith(
@@ -16,5 +18,7 @@ class AppTheme {
     appBarTheme: const AppBarTheme(backgroundColor: AppColor.lightAppBarColor),
     progressIndicatorTheme:
         const ProgressIndicatorThemeData(color: AppColor.appColor),
+    drawerTheme: DrawerThemeData(scrimColor: AppColor.transparentColor),
+    dialogTheme: DialogTheme(barrierColor: AppColor.halfTransparentColor),
   );
 }

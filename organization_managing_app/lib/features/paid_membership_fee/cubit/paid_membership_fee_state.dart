@@ -17,11 +17,18 @@ final class PaidMembershipFeeError extends PaidMembershipFeeState {
 }
 
 final class PaidMembershipFeeFetchSuccess extends PaidMembershipFeeState {
-  final List<PaidMembershipFeeModel> paidMembershipFeeList;
-  final List<MemberModel> membersList;
+  final List<MemberWithPaidMembershipFees> memberWithPaidMembershipFeesList;
+  late int paidMembershipFeesCount = 0;
+  late List<PaidMembershipFeeModel> paidMembershipFeeList = <PaidMembershipFeeModel>[];
 
   PaidMembershipFeeFetchSuccess({
-    required this.paidMembershipFeeList,
-    required this.membersList,
-  });
+    required this.memberWithPaidMembershipFeesList,
+  }) {
+    for (MemberWithPaidMembershipFees memberWithPaidMembershipFees in memberWithPaidMembershipFeesList) {
+      paidMembershipFeesCount += memberWithPaidMembershipFees.sortedPaidMembershipFeesOfMember.length;
+      for (PaidMembershipFeeModel paidMembershipFeeModel in memberWithPaidMembershipFees.sortedPaidMembershipFeesOfMember) {
+        paidMembershipFeeList.add(paidMembershipFeeModel);
+      }
+    }
+  }
 }

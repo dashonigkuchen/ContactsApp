@@ -74,7 +74,7 @@ class _MembersFilterPageState extends State<MembersFilterPage> {
             onPressed: () {
               _membersFilterContainer.storeCurrentFilter();
               Navigator.of(context).pop();
-              context.read<MembersCubit>().getAllMembers(queries: _generateQueries());
+              context.read<MembersCubit>().getAllMembersAndPaidMembershipFees(queries: _generateQueries());
             },
             child: const Text("Apply Filter"),
           ),

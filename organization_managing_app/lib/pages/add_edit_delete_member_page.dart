@@ -3,377 +3,556 @@ import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:organization_managing_app/core/routes/route_names.dart';
-import 'package:organization_managing_app/features/members/cubit/members_cubit.dart';
 import 'package:organization_managing_app/core/theme/app_color.dart';
 import 'package:organization_managing_app/core/widgets/custom_circular_loader.dart';
 import 'package:organization_managing_app/core/widgets/custom_snackbar.dart';
 import 'package:organization_managing_app/core/widgets/custom_text_form_field.dart';
 import 'package:organization_managing_app/data/model/member_model.dart';
+import 'package:organization_managing_app/data/model/member_with_paid_membership_fees.dart';
+import 'package:organization_managing_app/data/model/paid_membership_fee_model.dart';
+import 'package:organization_managing_app/features/members/cubit/members_cubit.dart';
 
 class AddEditDeleteMemberPage extends StatefulWidget {
-  final MemberModel? memberModel;
+  final MemberWithPaidMembershipFees? originalMemberWithLatestPaidMembershipFee;
   const AddEditDeleteMemberPage({
     super.key,
-    this.memberModel,
+    this.originalMemberWithLatestPaidMembershipFee,
   });
 
   @override
-  State<AddEditDeleteMemberPage> createState() =>
-      _AddEditDeleteMemberPageState();
+  State<AddEditDeleteMemberPage> createState() => _AddEditDeleteMemberPageState();
 }
 
 class _AddEditDeleteMemberPageState extends State<AddEditDeleteMemberPage> {
-  final _addEditDeleteMemberFormKey = GlobalKey<FormState>();
-  late String _id;
-  late TextEditingController _firstNameTextController,
-      _lastNameTextController,
-      _emailTextController,
-      _noMembershipFeeNeededReasonController;
+  final _memberDetailFormKey = GlobalKey<FormState>();
+  late final MemberWithPaidMembershipFees _memberWithLatestPaidMembershipFee =
+      widget.originalMemberWithLatestPaidMembershipFee ??
+          MemberWithPaidMembershipFees(
+            memberModel: MemberModel(
+                id: ID.unique(),
+                firstName: "",
+                lastName: "",
+                isHonoraryMember: false),
+            paidMembershipFeeList: null,
+          );
+  late bool _isAdd = false, _isEdit = false;
+  late bool _dataChanged = false, _isExit = false;
+  late TextEditingController _firstNameTextEditingController,
+      _lastNameTextEditingController,
+      _emailTextEditingController,
+      _streetAndHouseNumberTextEditingController,
+      _postalCodeTextEditingController,
+      _cityTextEditingController,
+      _phoneNumberTextEditingController,
+      _boardFunctionTextEditingController,
+      _noMembershipFeeNeededReasonTextEditingController;
   late DateTime? _birthDate, _entryDate;
   late bool _isHonoraryMember;
-  late String _noMembershipFeeNeededReason;
+  late String? _gender;
 
   @override
   void initState() {
     super.initState();
 
-    _id = widget.memberModel?.id ?? ID.unique();
-    _firstNameTextController = TextEditingController(
-      text: widget.memberModel?.firstName ?? "",
+    initializeDateFormatting('de_DE', null);
+
+    _isAdd = widget.originalMemberWithLatestPaidMembershipFee == null;
+
+    _firstNameTextEditingController = TextEditingController(
+      text: _memberWithLatestPaidMembershipFee.memberModel.firstName,
     );
-    _lastNameTextController = TextEditingController(
-      text: widget.memberModel?.lastName ?? "",
+    _lastNameTextEditingController = TextEditingController(
+      text: _memberWithLatestPaidMembershipFee.memberModel.lastName,
     );
-    _emailTextController = TextEditingController(
-      text: widget.memberModel?.email ?? "",
+    _emailTextEditingController = TextEditingController(
+      text: _memberWithLatestPaidMembershipFee.memberModel.email,
     );
-    _birthDate = widget.memberModel?.birthDate;
-    _entryDate = widget.memberModel?.entryDate;
-    _isHonoraryMember = widget.memberModel?.isHonoraryMember ?? false;
-    _noMembershipFeeNeededReasonController = TextEditingController(
-      text: widget.memberModel?.noMembershipFeeNeededReason ?? "",
+    _streetAndHouseNumberTextEditingController = TextEditingController(
+      text:
+          _memberWithLatestPaidMembershipFee.memberModel.streetWithHouseNumber,
     );
-    _noMembershipFeeNeededReason =
-        widget.memberModel?.noMembershipFeeNeededReason ?? "";
+    _postalCodeTextEditingController = TextEditingController(
+      text:
+          _memberWithLatestPaidMembershipFee.memberModel.postalCode?.toString(),
+    );
+    _cityTextEditingController = TextEditingController(
+      text: _memberWithLatestPaidMembershipFee.memberModel.city,
+    );
+    _phoneNumberTextEditingController = TextEditingController(
+      text: _memberWithLatestPaidMembershipFee.memberModel.phoneNumber,
+    );
+    _boardFunctionTextEditingController = TextEditingController(
+      text: _memberWithLatestPaidMembershipFee.memberModel.boardFunction,
+    );
+    _noMembershipFeeNeededReasonTextEditingController = TextEditingController(
+      text: _memberWithLatestPaidMembershipFee
+          .memberModel.noMembershipFeeNeededReason,
+    );
+
+    _birthDate = _memberWithLatestPaidMembershipFee.memberModel.birthDate;
+    _entryDate = _memberWithLatestPaidMembershipFee.memberModel.entryDate;
+
+    _isHonoraryMember =
+        _memberWithLatestPaidMembershipFee.memberModel.isHonoraryMember;
+
+    _gender = _memberWithLatestPaidMembershipFee.memberModel.gender;
   }
 
   @override
   void dispose() {
-    _firstNameTextController.dispose();
-    _lastNameTextController.dispose();
-    _emailTextController.dispose();
-    _noMembershipFeeNeededReasonController.dispose();
+    _firstNameTextEditingController.dispose();
+    _lastNameTextEditingController.dispose();
+    _emailTextEditingController.dispose();
+    _streetAndHouseNumberTextEditingController.dispose();
+    _postalCodeTextEditingController.dispose();
+    _cityTextEditingController.dispose();
+    _phoneNumberTextEditingController.dispose();
+    _boardFunctionTextEditingController.dispose();
+    _noMembershipFeeNeededReasonTextEditingController.dispose();
 
     super.dispose();
   }
 
-  bool _isAdd() {
-    return widget.memberModel == null;
-  }
-
-  void _reset() {
-    _addEditDeleteMemberFormKey.currentState!.reset();
-    _firstNameTextController.clear();
-    _lastNameTextController.clear();
-    _emailTextController.clear();
-    _noMembershipFeeNeededReasonController.clear();
-    _noMembershipFeeNeededReason = "";
-  }
-
   void _submit() {
-    if (_addEditDeleteMemberFormKey.currentState!.validate()) {
-      final memberModel = MemberModel(
-        id: _id,
-        firstName: _firstNameTextController.text,
-        lastName: _lastNameTextController.text,
-        email:
-            _emailTextController.text == "" ? null : _emailTextController.text,
-        birthDate: _birthDate,
-        entryDate: _entryDate,
-        isHonoraryMember: _isHonoraryMember,
-        noMembershipFeeNeededReason: _noMembershipFeeNeededReason == ""
-            ? null
-            : _noMembershipFeeNeededReason,
-      );
-
-      if (_isAdd()) {
+    if (_memberDetailFormKey.currentState!.validate()) {
+      final memberModel = _createCurrentMemberModel();
+      _memberWithLatestPaidMembershipFee.memberModel = memberModel;
+      if (_isAdd) {
         context.read<MembersCubit>().addMember(memberModel: memberModel);
       } else {
         context.read<MembersCubit>().editMember(memberModel: memberModel);
       }
+      _dataChanged = true;
     }
+  }
+
+  MemberModel _createCurrentMemberModel() {
+    return MemberModel(
+      id: _memberWithLatestPaidMembershipFee.memberModel.id,
+      firstName: _firstNameTextEditingController.text,
+      lastName: _lastNameTextEditingController.text,
+      email: _emailTextEditingController.text == ""
+          ? null
+          : _emailTextEditingController.text,
+      birthDate: _birthDate,
+      entryDate: _entryDate,
+      isHonoraryMember: _isHonoraryMember,
+      noMembershipFeeNeededReason:
+          _noMembershipFeeNeededReasonTextEditingController.text == ""
+              ? null
+              : _noMembershipFeeNeededReasonTextEditingController.text,
+      streetWithHouseNumber:
+          _streetAndHouseNumberTextEditingController.text == ""
+              ? null
+              : _streetAndHouseNumberTextEditingController.text,
+      postalCode: _postalCodeTextEditingController.text == ""
+          ? null
+          : int.tryParse(_postalCodeTextEditingController.text),
+      city: _cityTextEditingController.text == ""
+          ? null
+          : _cityTextEditingController.text,
+      phoneNumber: _phoneNumberTextEditingController.text == ""
+          ? null
+          : _phoneNumberTextEditingController.text,
+      gender: _gender,
+      boardFunction: _boardFunctionTextEditingController.text == ""
+          ? null
+          : _boardFunctionTextEditingController.text,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_isAdd() ? "Add Member" : "Edit Member"),
-        actions: [
-          if (!_isAdd())
-            IconButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text("Are you sure to delete?"),
-                      actionsAlignment: MainAxisAlignment.spaceBetween,
-                      actions: [
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text('Cancel'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            context.read<MembersCubit>().deleteMember(
-                                  memberModel: widget.memberModel!,
-                                );
-                          },
-                          child: const Text('Ok'),
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-              icon: const Icon(
-                Icons.delete,
-                color: AppColor.whiteColor,
-              ),
-            ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: BlocConsumer<MembersCubit, MembersState>(
-          listener: (context, state) {
-            if (state is MembersLoading) {
-              CustomCircularLoader.show(context);
-            } else if (state is MembersAddEditDeleteSuccess) {
-              _reset();
-              CustomCircularLoader.cancel(context);
-              CustomSnackbar.showSuccess(
-                context,
-                "Success",
-              );
-              context.pop();
-              context.read<MembersCubit>().getAllMembers();
-            } else if (state is MembersError) {
-              CustomCircularLoader.cancel(context);
-              CustomSnackbar.showError(
-                context,
-                state.failure.createFailureString(
-                  context: context,
-                ),
-              );
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) {
+        if (_dataChanged) {
+          context.read<MembersCubit>().getAllMembersAndPaidMembershipFees();
+        }
+      },
+      child: BlocListener<MembersCubit, MembersState>(
+        listener: (context, state) {
+          if (state is MembersLoading) {
+            CustomCircularLoader.show(context);
+          } else if (state is MembersAddEditDeleteSuccess) {
+            CustomCircularLoader.cancel(context);
+            CustomSnackbar.showSuccess(
+              context,
+              "Success",
+            );
+            if (_isExit) {
+              Navigator.of(context).pop();
             }
-          },
-          builder: (context, state) {
-            return Form(
-              key: _addEditDeleteMemberFormKey,
+          } else if (state is MembersError) {
+            CustomCircularLoader.cancel(context);
+            CustomSnackbar.showError(
+              context,
+              state.failure.createFailureString(
+                context: context,
+              ),
+            );
+          }
+        },
+        child: Form(
+          key: _memberDetailFormKey,
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text(_isAdd
+                  ? "Add Member"
+                  : _isEdit
+                      ? "Edit Member"
+                      : "Member Details"),
+              leading: IconButton(
+                onPressed: () {
+                  if (_memberWithLatestPaidMembershipFee.memberModel !=
+                      _createCurrentMemberModel()) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text("Save changes?"),
+                          actionsAlignment: MainAxisAlignment.spaceBetween,
+                          actions: [
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Discard changes'),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Continue editing'),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                _isExit = true;
+                                _submit();
+                              },
+                              child: const Text('Save'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  } else {
+                    Navigator.of(context).pop();
+                  }
+                },
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: AppColor.whiteColor,
+                ),
+              ),
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    if (_isAdd) {
+                      _isExit = true;
+                      _submit();
+                    } else if (_isEdit) {
+                      _submit();
+                    }
+
+                    if (!_isAdd) {
+                      setState(() {
+                        _isEdit = !_isEdit;
+                      });
+                    }
+                  },
+                  icon: Icon(
+                    _isAdd || _isEdit ? Icons.save : Icons.edit,
+                    color: AppColor.whiteColor,
+                  ),
+                ),
+              ],
+            ),
+            body: Padding(
+              padding: const EdgeInsets.all(16),
               child: ListView(
                 children: [
+                  const SizedBox(
+                    height: 10,
+                  ),
                   CustomTextFormField(
-                    controller: _firstNameTextController,
-                    validator: (val) {
-                      if (val!.isEmpty) {
-                        return "Required";
-                      }
-                      return null;
-                    },
+                    controller: _firstNameTextEditingController,
                     keyboardType: TextInputType.text,
-                    obsecureText: false,
                     labelText: "First Name",
-                    suffix: null,
-                    textInputAction: TextInputAction.next,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomTextFormField(
-                    controller: _lastNameTextController,
+                    readOnly: _isAdd || _isEdit ? false : true,
                     validator: (val) {
                       if (val!.isEmpty) {
                         return "Required";
                       }
                       return null;
                     },
-                    keyboardType: TextInputType.text,
-                    obsecureText: false,
-                    labelText: "Last Name",
-                    suffix: null,
                     textInputAction: TextInputAction.next,
                   ),
                   const SizedBox(
                     height: 10,
                   ),
                   CustomTextFormField(
-                    controller: _emailTextController,
+                    controller: _lastNameTextEditingController,
+                    labelText: "Last Name",
+                    readOnly: _isAdd || _isEdit ? false : true,
                     validator: (val) {
+                      if (val!.isEmpty) {
+                        return "Required";
+                      }
                       return null;
                     },
-                    keyboardType: TextInputType.emailAddress,
-                    obsecureText: false,
-                    labelText: "Email",
-                    suffix: null,
                     textInputAction: TextInputAction.next,
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
-                  DateTimeFormField(
-                    onChanged: (dateTime) {
-                      setState(() {
-                        _birthDate = dateTime;
-                      });
-                    },
-                    mode: DateTimeFieldPickerMode.date,
-                    decoration: const InputDecoration(
-                      labelText: "Birth Date",
-                      helperText: "YYYY/MM/DD",
-                    ),
-                    initialValue: _birthDate,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  DateTimeFormField(
-                    onChanged: (dateTime) {
-                      setState(() {
-                        _entryDate = dateTime;
-                      });
-                    },
-                    mode: DateTimeFieldPickerMode.date,
-                    decoration: const InputDecoration(
-                      labelText: "Entry Date",
-                      helperText: "YYYY/MM/DD",
-                    ),
-                    initialValue: _entryDate,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text("Is honorary member?"),
-                      Checkbox(
-                        value: _isHonoraryMember,
-                        onChanged: (val) => setState(() {
-                          _isHonoraryMember = val!;
-                        }),
-                      ),
-                    ],
-                  ),
-                  if (!_isHonoraryMember)
+                  if (!_isAdd)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text("Custom reason to exclude membership fee"),
-                        ElevatedButton(
-                          onPressed: () async {
-                            showDialog<String>(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return StatefulBuilder(
-                                    builder: (context, setState) {
-                                  return AlertDialog(
-                                    title: const Text(
-                                        "Custom reason to exclude member from membership fee"),
-                                    content: TextField(
-                                      controller:
-                                          _noMembershipFeeNeededReasonController,
-                                      autofocus: true,
-                                      onChanged: (value) => setState(
-                                        () {},
-                                      ),
-                                      decoration: InputDecoration(
-                                          suffix:
-                                              _noMembershipFeeNeededReasonController
-                                                          .text ==
-                                                      ""
-                                                  ? null
-                                                  : InkWell(
-                                                      onTap: () {
-                                                        setState(() {
-                                                          _noMembershipFeeNeededReasonController
-                                                              .text = "";
-                                                        });
-                                                      },
-                                                      child: Icon(
-                                                        Icons.clear,
-                                                        color:
-                                                            AppColor.greyColor,
-                                                      ),
-                                                    )),
-                                    ),
-                                    actions: [
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: const Text('Cancel'),
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop(
-                                              _noMembershipFeeNeededReasonController
-                                                  .text);
-                                        },
-                                        child: const Text('Ok'),
-                                      ),
-                                    ],
-                                  );
-                                });
-                              },
-                            ).then(
-                              (reason) {
-                                setState(() {
-                                  if (reason != null) {
-                                    _noMembershipFeeNeededReason = reason;
-                                  } else {
-                                    _noMembershipFeeNeededReasonController
-                                        .text = _noMembershipFeeNeededReason;
-                                  }
-                                });
-                              },
-                            );
-                          },
-                          child: Icon(_noMembershipFeeNeededReason == ""
-                              ? Icons.add
-                              : Icons.change_circle),
-                        ),
+                        const Text("Current membership fee state:"),
+                        _memberWithLatestPaidMembershipFee
+                            .getPaidMembershipFeeStateText(),
                       ],
                     ),
-                  if (!_isAdd() &&
-                      !_isHonoraryMember &&
-                      _noMembershipFeeNeededReason.isEmpty)
+                  if (!_isAdd)
+                    const SizedBox(
+                      height: 10,
+                    ),
+                  if (!_isAdd &&
+                      !_isEdit &&
+                      isMembershipFeePaymentNeeded(
+                          _memberWithLatestPaidMembershipFee.memberModel))
                     ElevatedButton.icon(
-                      onPressed: () => context.pushNamed(
-                        RouteNames.addEditDeletePaidMembershipFee,
-                        extra: [
-                          _id,
-                          "${_firstNameTextController.text} ${_lastNameTextController.text}",
-                          null
-                        ],
-                      ),
+                      onPressed: () async {
+                        PaidMembershipFeeModel? updatedData =
+                            await context.pushNamed(
+                          RouteNames.addEditDeletePaidMembershipFee,
+                          extra: [
+                            _memberWithLatestPaidMembershipFee.memberModel.id,
+                            "${_firstNameTextEditingController.text} ${_lastNameTextEditingController.text}",
+                          ],
+                        );
+
+                        if (updatedData != null) {
+                          setState(() {
+                            _memberWithLatestPaidMembershipFee
+                                .sortedPaidMembershipFeesOfMember
+                                .add(updatedData);
+                          });
+                          _dataChanged = true;
+                        }
+                      },
                       icon: const Icon(Icons.add),
                       label: const Text("Add paid membership fee"),
                     ),
-                  ElevatedButton.icon(
-                    onPressed: _submit,
-                    icon: const Icon(Icons.save),
-                    label: const Text("Save"),
+                  if (!_isAdd &&
+                      isMembershipFeePaymentNeeded(
+                          _memberWithLatestPaidMembershipFee.memberModel))
+                    const SizedBox(
+                      height: 10,
+                    ),
+                  ExpansionTile(
+                    title: Text(
+                        "${_isAdd ? "Add" : _isEdit ? "Edit" : "See"} more member details"),
+                    children: [
+                      CustomTextFormField(
+                        controller: _emailTextEditingController,
+                        labelText: "Email",
+                        readOnly: _isAdd || _isEdit ? false : true,
+                        textInputAction: TextInputAction.next,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      DateTimeFormField(
+                        decoration: const InputDecoration(
+                          labelText: "Birth Date",
+                        ),
+                        initialValue: _birthDate,
+                        enabled: _isAdd || _isEdit ? true : false,
+                        onChanged: (value) =>
+                            setState(() => _birthDate = value),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      DateTimeFormField(
+                        decoration: const InputDecoration(
+                          labelText: "Entry Date",
+                        ),
+                        initialValue: _entryDate,
+                        enabled: _isAdd || _isEdit ? true : false,
+                        onChanged: (value) =>
+                            setState(() => _entryDate = value),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      CustomTextFormField(
+                        controller: _streetAndHouseNumberTextEditingController,
+                        labelText: "Street and house number",
+                        readOnly: _isAdd || _isEdit ? false : true,
+                        textInputAction: TextInputAction.next,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      CustomTextFormField(
+                        controller: _postalCodeTextEditingController,
+                        labelText: "Postal Code",
+                        readOnly: _isAdd || _isEdit ? false : true,
+                        textInputAction: TextInputAction.next,
+                        keyboardType: TextInputType.number,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      CustomTextFormField(
+                        controller: _cityTextEditingController,
+                        labelText: "City",
+                        readOnly: _isAdd || _isEdit ? false : true,
+                        textInputAction: TextInputAction.next,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      CustomTextFormField(
+                        controller: _phoneNumberTextEditingController,
+                        labelText: "Phone Number",
+                        readOnly: _isAdd || _isEdit ? false : true,
+                        textInputAction: TextInputAction.next,
+                        keyboardType: TextInputType.phone,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      DropdownMenu<String?>(
+                        dropdownMenuEntries: [
+                          const DropdownMenuEntry(
+                              value: null, label: "Not given"),
+                          const DropdownMenuEntry(value: "w", label: "Female"),
+                          const DropdownMenuEntry(value: "m", label: "Male"),
+                        ],
+                        label: Text("Gender"),
+                        width: double.maxFinite,
+                        initialSelection: _gender,
+                        enabled: _isAdd || _isEdit ? true : false,
+                        onSelected: (value) => setState(() => _gender = value),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      CustomTextFormField(
+                        controller: _phoneNumberTextEditingController,
+                        labelText: "Phone Number",
+                        readOnly: _isAdd || _isEdit ? false : true,
+                        textInputAction: TextInputAction.next,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      CustomTextFormField(
+                        controller: _boardFunctionTextEditingController,
+                        labelText: "Board function",
+                        readOnly: _isAdd || _isEdit ? false : true,
+                        textInputAction: TextInputAction.next,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      DropdownMenu<bool>(
+                        dropdownMenuEntries: [
+                          const DropdownMenuEntry(value: true, label: "Yes"),
+                          const DropdownMenuEntry(value: false, label: "No"),
+                        ],
+                        label: Text("Honorary Member"),
+                        width: double.maxFinite,
+                        initialSelection: _isHonoraryMember,
+                        enabled: _isAdd || _isEdit ? true : false,
+                        onSelected: (value) =>
+                            setState(() => _isHonoraryMember = value!),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      if (!_isHonoraryMember)
+                        CustomTextFormField(
+                          controller:
+                              _noMembershipFeeNeededReasonTextEditingController,
+                          labelText: "Custom reason to exclude membership fee",
+                          readOnly: _isAdd || _isEdit ? false : true,
+                          textInputAction: TextInputAction.done,
+                        ),
+                      if (!_isHonoraryMember)
+                        const SizedBox(
+                          height: 10,
+                        ),
+                    ],
                   ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  ExpansionTile(
+                    title: Text("${_isEdit ? "Edit" : "See"} payments"),
+                    children: [
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: _memberWithLatestPaidMembershipFee
+                            .sortedPaidMembershipFeesOfMember.length,
+                        itemBuilder: (context, index) {
+                          final paidMembershipFee =
+                              _memberWithLatestPaidMembershipFee
+                                  .sortedPaidMembershipFeesOfMember[index];
+                          return ListTile(
+                            onTap: () async {
+                              if (_isEdit) {
+                                final updatedData = await context.pushNamed(
+                                  RouteNames.addEditDeletePaidMembershipFee,
+                                  extra: [
+                                    paidMembershipFee.memberId,
+                                    "${_firstNameTextEditingController.text} ${_lastNameTextEditingController.text}",
+                                    paidMembershipFee,
+                                  ],
+                                );
+
+                                if (updatedData != null) {
+                                  setState(() {
+                                    if (updatedData is PaidMembershipFeeModel) {
+                                      _memberWithLatestPaidMembershipFee
+                                              .sortedPaidMembershipFeesOfMember[
+                                          index] = updatedData;
+                                    } else if (updatedData is bool) {
+                                      if (updatedData) {
+                                        _memberWithLatestPaidMembershipFee
+                                            .sortedPaidMembershipFeesOfMember
+                                            .removeAt(index);
+                                      }
+                                    }
+                                  });
+                                  _dataChanged = true;
+                                }
+                              }
+                            },
+                            title: Text("MB ${paidMembershipFee.year}, ${paidMembershipFee.id}"),
+                            subtitle: Text(
+                                "Paid on ${DateFormat.yMMMMd('de_DE').format(paidMembershipFee.paymentDate)}"),
+                            trailing:
+                                Text("${paidMembershipFee.amount.toString()}€"),
+                          );
+                        },
+                      ),
+                    ],
+                  )
                 ],
               ),
-            );
-          },
+            ),
+          ),
         ),
       ),
     );

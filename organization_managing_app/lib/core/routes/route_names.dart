@@ -3,8 +3,7 @@ class RouteNames {
   static String get login => "login";
   static String get register => "register";
   static String get members => "members";
-  static String get addMember => "addMember";
-  static String get editMember => "editMember";
+  static String get addEditDeleteMember => "addEditDeleteMember";
   static String get addEditDeletePaidMembershipFee => "addEditDeletePaidMembershipFee";
   static String get settings => "settings";
   static String get filterMembers => "filterMembers";

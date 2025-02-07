@@ -38,6 +38,8 @@ class _AddEditDeletePaidMembershipFeePageState
   final TextEditingController _amountTextController = TextEditingController();
   late DateTime _paymentDate = DateTime.now();
   late int _year = DateTime.now().year;
+  late final String _id = widget.paidMembershipFeeModel?.id ?? ID.unique();
+  late bool _delete = false;
 
   bool _isAdd() {
     return widget.paidMembershipFeeModel == null;
@@ -47,12 +49,28 @@ class _AddEditDeletePaidMembershipFeePageState
   void initState() {
     super.initState();
 
-    _amountTextController.value =
-        TextEditingValue(text: _currencyTextInputFormatter.formatDouble(15.0));
+    _amountTextController.value = 
+        TextEditingValue(text: _currencyTextInputFormatter.formatDouble(_isAdd() ? 15.0 : widget.paidMembershipFeeModel!.amount));
+    if (!_isAdd()) {
+      _year = widget.paidMembershipFeeModel!.year;
+    }
+  }
+
+  PaidMembershipFeeModel _createCurrentPaidMembershipFeeModel() {
+    return PaidMembershipFeeModel(
+                        id: _id,
+                        amount: _currencyTextInputFormatter.getDouble(),
+                        year: _year,
+                        paymentDate: _paymentDate,
+                        memberId: widget.memberId,
+                      );
   }
 
   @override
   Widget build(BuildContext context) {
+    if (!_isAdd()) {
+      print(widget.paidMembershipFeeModel!.id);
+    }
     return Scaffold(
       appBar: AppBar(
         title: _isAdd()
@@ -84,6 +102,7 @@ class _AddEditDeletePaidMembershipFeePageState
                                   paidMembershipFeeModel:
                                       widget.paidMembershipFeeModel!,
                                 );
+                            _delete = true;
                           },
                           child: const Text('Ok'),
                         ),
@@ -111,7 +130,7 @@ class _AddEditDeletePaidMembershipFeePageState
                 context,
                 "Success",
               );
-              Navigator.pop(context);
+              Navigator.of(context).pop(_delete ? true : _createCurrentPaidMembershipFeeModel());
             } else if (state is PaidMembershipFeeError) {
               CustomCircularLoader.cancel(context);
               CustomSnackbar.showError(
@@ -167,9 +186,8 @@ class _AddEditDeletePaidMembershipFeePageState
                     mode: DateTimeFieldPickerMode.date,
                     decoration: const InputDecoration(
                       labelText: "Payment Date",
-                      helperText: "YYYY/MM/DD",
                     ),
-                    initialValue: DateTime.now(),
+                    initialValue: _isAdd() ? DateTime.now() : widget.paidMembershipFeeModel!.paymentDate,
                     lastDate: DateTime.now(),
                     canClear: false,
                     validator: (val) {
@@ -223,15 +241,7 @@ class _AddEditDeletePaidMembershipFeePageState
                   ),
                   ElevatedButton.icon(
                     onPressed: () {
-                      final paidMembershipFeeModel = PaidMembershipFeeModel(
-                        id: _isAdd()
-                            ? ID.unique()
-                            : widget.paidMembershipFeeModel!.id,
-                        amount: _currencyTextInputFormatter.getDouble(),
-                        year: _year,
-                        paymentDate: _paymentDate,
-                        memberId: widget.memberId,
-                      );
+                      final paidMembershipFeeModel = _createCurrentPaidMembershipFeeModel();
                       if (_isAdd()) {
                         context
                             .read<PaidMembershipFeeCubit>()

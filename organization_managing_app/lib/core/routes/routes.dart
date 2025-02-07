@@ -1,6 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:organization_managing_app/core/routes/route_names.dart';
-import 'package:organization_managing_app/data/model/member_model.dart';
+import 'package:organization_managing_app/data/model/member_with_paid_membership_fees.dart';
 import 'package:organization_managing_app/pages/add_edit_delete_member_page.dart';
 import 'package:organization_managing_app/pages/add_edit_delete_paid_membership_fee_page.dart';
 import 'package:organization_managing_app/pages/login_page.dart';
@@ -34,17 +34,11 @@ final GoRouter router = GoRouter(
       builder: (context, state) => const MembersPage(),
     ),
     GoRoute(
-      name: RouteNames.addMember,
-      path: "/addMember",
-      builder: (context, state) => const AddEditDeleteMemberPage(),
-    ),
-    GoRoute(
-      name: RouteNames.editMember,
-      path: "/editMember",
+      name: RouteNames.addEditDeleteMember,
+      path: "/addEditDeleteMember",
       builder: (context, state) {
-        final memberModel = state.extra as MemberModel;
         return AddEditDeleteMemberPage(
-          memberModel: memberModel,
+          originalMemberWithLatestPaidMembershipFee: state.extra as MemberWithPaidMembershipFees?,
         );
       },
     ),

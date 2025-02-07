@@ -9,12 +9,10 @@ final class MembersLoading extends MembersState {}
 final class MembersAddEditDeleteSuccess extends MembersState {}
 
 final class MembersFetchSuccess extends MembersState {
-  final List<MemberModel> membersList;
-  final List<PaidMembershipFeeModel> paidMembershipFeeList;
+  final List<MemberWithPaidMembershipFees> memberWithPaidMembershipFeesList;
 
   MembersFetchSuccess({
-    required this.membersList,
-    required this.paidMembershipFeeList,
+    required this.memberWithPaidMembershipFeesList,
   });
 }
 

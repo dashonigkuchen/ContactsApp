@@ -6,11 +6,11 @@ class CustomTextFormField extends StatelessWidget {
   const CustomTextFormField({
     super.key,
     required this.controller,
-    required this.validator,
-    required this.keyboardType,
-    required this.obsecureText,
-    required this.labelText,
-    required this.suffix,
+    this.validator,
+    this.keyboardType,
+    this.obsecureText,
+    this.labelText,
+    this.suffix,
     this.onFieldSubmitted,
     this.textInputAction,
     this.formatter,
@@ -18,10 +18,10 @@ class CustomTextFormField extends StatelessWidget {
   });
 
   final TextEditingController controller;
-  final String? Function(String? val) validator;
-  final TextInputType keyboardType;
-  final bool obsecureText;
-  final String labelText;
+  final String? Function(String? val)? validator;
+  final TextInputType? keyboardType;
+  final bool? obsecureText;
+  final String? labelText;
   final Widget? suffix;
   final Function(String)? onFieldSubmitted;
   final TextInputAction? textInputAction;
@@ -31,7 +31,7 @@ class CustomTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      obscureText: obsecureText,
+      obscureText: obsecureText ?? false,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: controller,
       style: Theme.of(context).textTheme.titleMedium!,
@@ -39,7 +39,6 @@ class CustomTextFormField extends StatelessWidget {
       decoration: InputDecoration(
         suffix: suffix,
         labelText: labelText,
-        hintStyle: const TextStyle(fontWeight: FontWeight.w400),
         border: OutlineInputBorder(
           borderSide: const BorderSide(color: AppColor.borderColor, width: 1),
           borderRadius: BorderRadius.circular(10),
@@ -73,6 +72,7 @@ class CustomTextFormField extends StatelessWidget {
       },
       inputFormatters: formatter != null ? [formatter!] : null,
       readOnly: readOnly ?? false,
+      enabled: readOnly != null ? !readOnly! : true,
     );
   }
 }

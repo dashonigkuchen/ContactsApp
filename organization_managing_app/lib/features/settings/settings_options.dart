@@ -1,21 +1,43 @@
 import 'package:flutter/material.dart';
 
 class SettingsOptions {
-  static List<DropdownMenuItem<ThemeMode>>? getThemeModeOptions({
+  // static List<DropdownMenuItem<ThemeMode>>? getThemeModeOptions({
+  //   required BuildContext context,
+  // }) {
+  //   return [
+  //     const DropdownMenuItem<ThemeMode>(
+  //       value: ThemeMode.system,
+  //       child: Text("System"),
+  //     ),
+  //     const DropdownMenuItem<ThemeMode>(
+  //       value: ThemeMode.light,
+  //       child: Text("Light"),
+  //     ),
+  //     const DropdownMenuItem<ThemeMode>(
+  //       value: ThemeMode.dark,
+  //       child: Text("Dark"),
+  //     ),
+  //   ];
+  // }
+
+  static List<DropdownMenuEntry<ThemeMode>> getThemeModeOptions({
     required BuildContext context,
   }) {
     return [
-      const DropdownMenuItem<ThemeMode>(
+      const DropdownMenuEntry<ThemeMode>(
         value: ThemeMode.system,
-        child: Text("System"),
+        label: "System",
+        leadingIcon: Icon(Icons.phone_android),
       ),
-      const DropdownMenuItem<ThemeMode>(
+      const DropdownMenuEntry<ThemeMode>(
         value: ThemeMode.light,
-        child: Text("Light"),
+        label: "Light",
+        leadingIcon: Icon(Icons.light_mode),
       ),
-      const DropdownMenuItem<ThemeMode>(
+      const DropdownMenuEntry<ThemeMode>(
         value: ThemeMode.dark,
-        child: Text("Dark"),
+        label: "Dark",
+        leadingIcon: Icon(Icons.dark_mode),
       ),
     ];
   }

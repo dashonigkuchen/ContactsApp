@@ -1,17 +1,17 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:organization_managing_app/core/error/failure.dart';
 import 'package:organization_managing_app/core/locator/locator.dart';
-import 'package:organization_managing_app/data/model/member_model.dart';
+import 'package:organization_managing_app/data/model/member_with_paid_membership_fees.dart';
 import 'package:organization_managing_app/data/model/paid_membership_fee_model.dart';
-import 'package:organization_managing_app/data/provider/repository/members_repository.dart';
 import 'package:organization_managing_app/data/provider/repository/paid_membership_fee_repository.dart';
+import 'package:organization_managing_app/features/common/common_data_loader.dart';
 
 part 'paid_membership_fee_state.dart';
 
 class PaidMembershipFeeCubit extends Cubit<PaidMembershipFeeState> {
   final PaidMembershipFeeRepository _paidMembershipFeeRepository =
       locator<PaidMembershipFeeRepository>();
-  final MembersRepository _membersRepository = locator<MembersRepository>();
+  final CommonDataLoader _commonDataLoader = locator<CommonDataLoader>();
 
   PaidMembershipFeeCubit() : super(PaidMembershipFeeInitial());
 
@@ -28,30 +28,20 @@ class PaidMembershipFeeCubit extends Cubit<PaidMembershipFeeState> {
         (document) => emit(PaidMembershipFeeSuccess()));
   }
 
-  void getAllPaidMembershipFees({
+  void getAllMembersAndPaidMembershipFees({
     List<String>? queries,
   }) async {
     emit(PaidMembershipFeeLoading());
 
-    final resMembers = await _membersRepository.getAllMembers(
+    final res = await _commonDataLoader.getAllMembersAndPaidMembershipFees(
       queries: queries,
     );
-    final resMembershipFees =
-        await _paidMembershipFeeRepository.getAllPaidMembershipFees();
 
-    if (resMembers.isLeft() || resMembershipFees.isLeft()) {
-      emit(PaidMembershipFeeError(
-        failure: resMembers.isLeft()
-            ? resMembers.getLeft().toNullable()!
-            : resMembershipFees.getLeft().toNullable()!,
-      ));
-    } else {
-      final membersList = resMembers.getRight().toNullable()!;
-      final paidMembershipFeeList = resMembershipFees.getRight().toNullable()!;
-      emit(PaidMembershipFeeFetchSuccess(
-          membersList: membersList,
-          paidMembershipFeeList: paidMembershipFeeList));
-    }
+    res.fold(
+        (failure) => emit(PaidMembershipFeeError(failure: failure)),
+        (memberWithPaidMembershipFeesList) => emit(PaidMembershipFeeFetchSuccess(
+            memberWithPaidMembershipFeesList:
+                memberWithPaidMembershipFeesList)));
   }
 
   void editPaidMembershipFee({
