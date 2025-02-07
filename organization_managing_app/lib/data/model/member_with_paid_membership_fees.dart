@@ -5,7 +5,7 @@ import 'package:organization_managing_app/data/model/paid_membership_fee_model.d
 
 class MemberWithPaidMembershipFees {
   late MemberModel memberModel;
-  late List<PaidMembershipFeeModel> sortedPaidMembershipFeesOfMember;
+  late List<PaidMembershipFeeModel> sortedPaidMembershipFeesOfMember = <PaidMembershipFeeModel>[];
 
   MemberWithPaidMembershipFees({
     required this.memberModel,
