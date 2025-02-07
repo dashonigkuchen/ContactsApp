@@ -96,6 +96,7 @@ class AppNavigationDrawer extends StatelessWidget {
                           ElevatedButton(
                             onPressed: () {
                               Navigator.of(context).pop();
+                              context.read<AuthCubit>().signOut();
                             },
                             child: const Text('Ok'),
                           ),

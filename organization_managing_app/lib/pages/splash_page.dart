@@ -5,7 +5,6 @@ import 'package:organization_managing_app/features/splash/cubit/splash_cubit.dar
 import 'package:organization_managing_app/core/routes/route_names.dart';
 import 'package:organization_managing_app/core/utils/app_images.dart';
 import 'package:organization_managing_app/core/widgets/custom_circular_loader.dart';
-import 'package:organization_managing_app/core/widgets/custom_snackbar.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -37,12 +36,6 @@ class _SplashPageState extends State<SplashPage> {
             } else if (state is SplashError) {
               CustomCircularLoader.cancel(context);
               context.goNamed(RouteNames.login);
-              CustomSnackbar.showError(
-                context,
-                state.failure.createFailureString(
-                  context: context,
-                ),
-              );
             }
           },
           builder: (context, state) {

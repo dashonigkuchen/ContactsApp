@@ -69,8 +69,10 @@ class AuthCubit extends Cubit<AuthState> {
 
     final res = await _authRepository.signOut();
 
-    res != null
-        ? (failure) => emit(AuthError(failure: failure))
-        : (session) => emit(AuthSuccess());
+    if (res != null) {
+      emit(AuthError(failure: res));
+    } else {
+      emit(AuthSuccess());
+    }
   }
 }

@@ -23,6 +23,10 @@ void setupLocator() async {
     () => AppwriteProvider(),
   );
 
+  locator.registerLazySingleton<CommonDataLoader>(
+    () => CommonDataLoader(),
+  );
+
   locator.registerLazySingleton<AuthRepository>(
     () => AuthRepository(),
   );
@@ -39,8 +43,4 @@ void setupLocator() async {
     () => MembersFilterContainer(),
   );
   await locator<MembersFilterContainer>().init();
-
-  locator.registerLazySingleton<CommonDataLoader>(
-    () => CommonDataLoader(),
-  );
 }

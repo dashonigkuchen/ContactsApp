@@ -16,7 +16,7 @@ class MembersCubit extends Cubit<MembersState> {
       locator<PaidMembershipFeeRepository>();
   final CommonDataLoader _commonDataLoader = locator<CommonDataLoader>();
   final MembersFilterContainer _membersFilterContainer =
-      locator.get<MembersFilterContainer>();
+      locator<MembersFilterContainer>();
 
   MembersCubit() : super(MembersInitial());
 
