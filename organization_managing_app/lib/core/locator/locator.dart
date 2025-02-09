@@ -6,7 +6,7 @@ import 'package:organization_managing_app/core/storage/secure_storage_service.da
 import 'package:organization_managing_app/data/provider/repository/members_repository.dart';
 import 'package:organization_managing_app/data/provider/repository/paid_membership_fee_repository.dart';
 import 'package:organization_managing_app/features/common/common_data_loader.dart';
-import 'package:organization_managing_app/features/members/members_filter_container.dart';
+import 'package:organization_managing_app/features/members/members_filter_service.dart';
 
 final locator = GetIt.I;
 
@@ -39,8 +39,8 @@ void setupLocator() async {
     () => PaidMembershipFeeRepository(),
   );
 
-  locator.registerLazySingleton<MembersFilterContainer>(
-    () => MembersFilterContainer(),
+  locator.registerLazySingleton<MembersFilterService>(
+    () => MembersFilterService(),
   );
-  await locator<MembersFilterContainer>().init();
+  await locator<MembersFilterService>().init();
 }

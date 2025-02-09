@@ -50,8 +50,9 @@ class AppNavigationDrawer extends StatelessWidget {
               DrawerHeader(
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    fit: BoxFit.fill,
+                    fit: BoxFit.cover,
                     image: AssetImage(AppImages.logo),
+                    opacity: 0.2,
                   ),
                 ),
                 child: const Text(
@@ -69,7 +70,8 @@ class AppNavigationDrawer extends StatelessWidget {
               ListTile(
                 leading: const Icon(Icons.money),
                 title: const Text("Paid Membership Fees"),
-                onTap: () => _redirectToPage(context, RouteNames.paidMembershipFee),
+                onTap: () =>
+                    _redirectToPage(context, RouteNames.paidMembershipFee),
               ),
               ListTile(
                 leading: const Icon(Icons.settings),

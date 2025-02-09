@@ -123,13 +123,11 @@ class _AddEditDeleteMemberPageState extends State<AddEditDeleteMemberPage> {
   void _submit() {
     if (_memberDetailFormKey.currentState!.validate()) {
       final memberModel = _createCurrentMemberModel();
-      _memberWithLatestPaidMembershipFee.memberModel = memberModel;
       if (_isAdd) {
         context.read<MembersCubit>().addMember(memberModel: memberModel);
       } else {
         context.read<MembersCubit>().editMember(memberModel: memberModel);
       }
-      _dataChanged = true;
     }
   }
 
@@ -187,6 +185,11 @@ class _AddEditDeleteMemberPageState extends State<AddEditDeleteMemberPage> {
               context,
               "Success",
             );
+            _dataChanged = true;
+            _memberWithLatestPaidMembershipFee.memberModel = _createCurrentMemberModel();
+            if (_isEdit) {
+              setState(() => _isEdit = false);
+            }
             if (_isExit) {
               Navigator.of(context).pop();
             }
@@ -264,10 +267,8 @@ class _AddEditDeleteMemberPageState extends State<AddEditDeleteMemberPage> {
                       _submit();
                     }
 
-                    if (!_isAdd) {
-                      setState(() {
-                        _isEdit = !_isEdit;
-                      });
+                    if (!_isEdit && !_isAdd) {
+                      setState(() => _isEdit = true);
                     }
                   },
                   icon: Icon(
@@ -365,6 +366,9 @@ class _AddEditDeleteMemberPageState extends State<AddEditDeleteMemberPage> {
                     title: Text(
                         "${_isAdd ? "Add" : _isEdit ? "Edit" : "See"} more member details"),
                     children: [
+                      const SizedBox(
+                        height: 10,
+                      ),
                       CustomTextFormField(
                         controller: _emailTextEditingController,
                         labelText: "Email",
@@ -448,15 +452,6 @@ class _AddEditDeleteMemberPageState extends State<AddEditDeleteMemberPage> {
                         initialSelection: _gender,
                         enabled: _isAdd || _isEdit ? true : false,
                         onSelected: (value) => setState(() => _gender = value),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      CustomTextFormField(
-                        controller: _phoneNumberTextEditingController,
-                        labelText: "Phone Number",
-                        readOnly: _isAdd || _isEdit ? false : true,
-                        textInputAction: TextInputAction.next,
                       ),
                       const SizedBox(
                         height: 10,
@@ -560,7 +555,7 @@ class _AddEditDeleteMemberPageState extends State<AddEditDeleteMemberPage> {
                               }
                             },
                             title: Text(
-                                "MB ${paidMembershipFee.year}, ${paidMembershipFee.id}"),
+                                "MB ${paidMembershipFee.year}"),
                             subtitle: Text(
                                 "Paid on ${DateFormat.yMMMMd('de_DE').format(paidMembershipFee.paymentDate)}"),
                             trailing:

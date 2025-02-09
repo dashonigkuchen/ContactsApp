@@ -6,7 +6,7 @@ import 'package:organization_managing_app/data/model/member_with_paid_membership
 import 'package:organization_managing_app/data/provider/repository/members_repository.dart';
 import 'package:organization_managing_app/data/provider/repository/paid_membership_fee_repository.dart';
 import 'package:organization_managing_app/features/common/common_data_loader.dart';
-import 'package:organization_managing_app/features/members/members_filter_container.dart';
+import 'package:organization_managing_app/features/members/members_filter_service.dart';
 
 part 'members_state.dart';
 
@@ -15,8 +15,8 @@ class MembersCubit extends Cubit<MembersState> {
   final PaidMembershipFeeRepository _paidMembershipFeeRepository =
       locator<PaidMembershipFeeRepository>();
   final CommonDataLoader _commonDataLoader = locator<CommonDataLoader>();
-  final MembersFilterContainer _membersFilterContainer =
-      locator<MembersFilterContainer>();
+  final MembersFilterService _membersFilterContainer =
+      locator<MembersFilterService>();
 
   MembersCubit() : super(MembersInitial());
 

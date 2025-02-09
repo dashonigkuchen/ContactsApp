@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:organization_managing_app/core/locator/locator.dart';
 import 'package:organization_managing_app/features/members/cubit/members_cubit.dart';
-import 'package:organization_managing_app/features/members/members_filter_container.dart';
+import 'package:organization_managing_app/features/members/members_filter_service.dart';
 
 class MembersFilterPage extends StatefulWidget {
   const MembersFilterPage({super.key});
@@ -12,8 +12,10 @@ class MembersFilterPage extends StatefulWidget {
 }
 
 class _MembersFilterPageState extends State<MembersFilterPage> {
-  final MembersFilterContainer _membersFilterContainer =
-      locator<MembersFilterContainer>();
+  final MembersFilterService _membersFilterService =
+      locator<MembersFilterService>();
+  late final MembersFilterContainer _membersFilterContainer =
+      _membersFilterService.membersFilterContainer.copy();
 
   @override
   Widget build(BuildContext context) {
@@ -24,115 +26,82 @@ class _MembersFilterPageState extends State<MembersFilterPage> {
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: 20),
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text("Only honorary member"),
-              Checkbox(
-                value: _membersFilterContainer.onlyHonoraryMember,
-                onChanged: (val) {
-                  if (val != null) {
-                    setState(() {});
-                    _membersFilterContainer.onlyHonoraryMember = val;
-                  }
-                },
-              ),
-            ],
+          CheckboxListTile(
+            value: _membersFilterContainer.onlyHonoraryMember,
+            title: Text("Only honorary member"),
+            onChanged: (val) {
+              if (val != null) {
+                setState(() {});
+                _membersFilterContainer.onlyHonoraryMember = val;
+              }
+            },
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text("Only not paid member [NOT WORKING NOW]"),
-              Checkbox(
-                value: _membersFilterContainer.onlyNotPaidMembers,
-                onChanged: (val) {
-                  if (val != null) {
-                    setState(() {});
-                    _membersFilterContainer.onlyNotPaidMembers = val;
-                  }
-                },
-              ),
-            ],
+          CheckboxListTile(
+            value: _membersFilterContainer.onlyNotPaidMembers,
+            title: Text("Only not paid member [NOT WORKING NOW]"),
+            onChanged: (val) {
+              if (val != null) {
+                setState(() {});
+                _membersFilterContainer.onlyNotPaidMembers = val;
+              }
+            },
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text("Only paid members [NOT WORKING NOW]"),
-              Checkbox(
-                value: _membersFilterContainer.onlyPaidMembers,
-                onChanged: (val) {
-                  if (val != null) {
-                    setState(() {});
-                    _membersFilterContainer.onlyPaidMembers = val;
-                  }
-                },
-              ),
-            ],
+          CheckboxListTile(
+            value: _membersFilterContainer.onlyPaidMembers,
+            title: Text("Only paid members [NOT WORKING NOW]"),
+            onChanged: (val) {
+              if (val != null) {
+                setState(() {});
+                _membersFilterContainer.onlyPaidMembers = val;
+              }
+            },
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text("Only no payment needed members"),
-              Checkbox(
-                value: _membersFilterContainer.onlyNoPaymentNeededMembers,
-                onChanged: (val) {
-                  if (val != null) {
-                    setState(() {});
-                    _membersFilterContainer.onlyNoPaymentNeededMembers = val;
-                  }
-                },
-              ),
-            ],
+          CheckboxListTile(
+            value: _membersFilterContainer.onlyNoPaymentNeededMembers,
+            title: Text("Only no payment needed members"),
+            onChanged: (val) {
+              if (val != null) {
+                setState(() {});
+                _membersFilterContainer.onlyNoPaymentNeededMembers = val;
+              }
+            },
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text("Only board members"),
-              Checkbox(
-                value: _membersFilterContainer.onlyBoardMembers,
-                onChanged: (val) {
-                  if (val != null) {
-                    setState(() {});
-                    _membersFilterContainer.onlyBoardMembers = val;
-                  }
-                },
-              ),
-            ],
+          CheckboxListTile(
+            value: _membersFilterContainer.onlyBoardMembers,
+            title: Text("Only board members"),
+            onChanged: (val) {
+              if (val != null) {
+                setState(() {});
+                _membersFilterContainer.onlyBoardMembers = val;
+              }
+            },
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text("Also show deactivated members"),
-              Checkbox(
-                value: _membersFilterContainer.alsoShowDeactivatedMembers,
-                onChanged: (val) {
-                  if (val != null) {
-                    setState(() {});
-                    _membersFilterContainer.alsoShowDeactivatedMembers = val;
-                  }
-                },
-              ),
-            ],
+          CheckboxListTile(
+            value: _membersFilterContainer.alsoShowDeactivatedMembers,
+            title: Text("Also show deactivated members"),
+            onChanged: (val) {
+              if (val != null) {
+                setState(() {});
+                _membersFilterContainer.alsoShowDeactivatedMembers = val;
+              }
+            },
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text("Only deactivated members"),
-              Checkbox(
-                value: _membersFilterContainer.onlyDeactivatedMembers,
-                onChanged: (val) {
-                  if (val != null) {
-                    setState(() {});
-                    _membersFilterContainer.onlyDeactivatedMembers = val;
-                  }
-                },
-              ),
-            ],
+          CheckboxListTile(
+            value: _membersFilterContainer.onlyDeactivatedMembers,
+            title: Text("Only deactivated members"),
+            onChanged: (val) {
+              if (val != null) {
+                setState(() {});
+                _membersFilterContainer.onlyDeactivatedMembers = val;
+              }
+            },
           ),
           ElevatedButton(
             onPressed: () {
-              _membersFilterContainer.storeCurrentFilter();
-              Navigator.of(context).pop();
+              _membersFilterService.membersFilterContainer =
+                  _membersFilterContainer;
+              _membersFilterService.storeCurrentFilter();
+              Navigator.of(context).pop(true);
               context.read<MembersCubit>().getAllMembersAndPaidMembershipFees();
             },
             child: const Text("Apply Filter"),

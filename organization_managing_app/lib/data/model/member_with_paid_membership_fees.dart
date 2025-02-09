@@ -45,7 +45,7 @@ class MemberWithPaidMembershipFees {
         );
       } else {
         return Text(
-          "Not paid for ${sortedPaidMembershipFeesOfMember.elementAt(0).year.toString()}",
+          "Last paid for ${sortedPaidMembershipFeesOfMember.elementAt(0).year.toString()}",
           style: const TextStyle(
             color: AppColor.snackBarRed,
           ),
